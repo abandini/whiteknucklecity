@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="White Knuckle City">
+  <defs>
+    <clipPath id="r"><rect width="64" height="64" rx="13"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="#0b0d10"/>
+    <rect x="0" y="0" width="7" height="64" fill="#d7263d"/>
+    <text x="36" y="47" text-anchor="middle"
+          font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-weight="900"
+          font-size="42" letter-spacing="-2" fill="#f4f1ea">W</text>
+  </g>
+</svg>

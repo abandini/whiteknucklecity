@@ -1,0 +1,14 @@
+{
+  "name": "White Knuckle City",
+  "short_name": "WKC",
+  "description": "A nickname and love letter to Cleveland, Ohio sports fandom — Guardians, Browns, Cavaliers — plus a live tension index.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "icons": [
+    { "src": "/assets/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/assets/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

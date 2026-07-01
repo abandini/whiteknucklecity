@@ -13,4 +13,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://whiteknucklecity.com/sitemap.xml
+Sitemap: https://white-knuckle-city.bill-burkey.workers.dev/sitemap.xml

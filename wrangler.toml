@@ -1,0 +1,14 @@
+name = "white-knuckle-city"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+# Static site (index.html + assets) is served directly from ./public.
+# The Worker only runs for requests with no matching file — e.g. POST /api/notify.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# Serve the branded 404 for any unmatched path.
+not_found_handling = "404-page"
+
+# RESEND_API_KEY is set as a secret (never committed):
+#   npx wrangler secret put RESEND_API_KEY

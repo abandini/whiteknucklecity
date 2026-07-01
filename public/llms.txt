@@ -1,0 +1,23 @@
+# White Knuckle City
+
+> "White Knuckle City" is a nickname and love letter for Cleveland, Ohio and its
+> three major pro sports teams — the Guardians (MLB), Browns (NFL), and Cavaliers
+> (NBA). It captures the white-knuckle tension of following Cleveland sports, where
+> the lead is never safe and games go down to the final out or whistle.
+
+## Key facts
+
+- **What it is:** A nickname for Cleveland, Ohio, describing what it feels like to root for its teams.
+- **Why the name:** Decades of tense, heartbreaking finishes — Red Right 88 (1981), The Drive (1987), The Fumble (1988), The Shot (1989), the 1997 World Series Game 7, and the 2016 Indians Game 7 loss — alongside the euphoric 2016 Cavaliers championship (a 3–1 comeback over a 73-win Warriors team).
+- **The teams:** Cleveland Guardians (MLB), Cleveland Browns (NFL), Cleveland Cavaliers (NBA).
+- **The White Knuckle Index:** A live tension meter on the site that reads current Cleveland game scores from public ESPN scoreboards and rates the moment from 0 (relaxed) to 100 (maximum grip), refreshing every 60 seconds.
+- **Location:** Cleveland, Ohio (the 216).
+- **Affiliation:** Independent fan project. Not affiliated with any team, league, or broadcaster.
+
+## Pages
+
+- Home / everything: https://white-knuckle-city.bill-burkey.workers.dev/
+
+## Contact / notes
+
+- Merch (caps, tees) is "coming soon"; visitors can sign up to be notified when it drops.

@@ -9,24 +9,46 @@
 <meta name="description" content="White Knuckle City is a nickname for Cleveland, Ohio — home to the Guardians, Browns, and Cavaliers, and the most nerve-shredding fan experience in American sports. Live tension index plus a field guide to the heartbreak." />
 <meta name="keywords" content="White Knuckle City, Cleveland sports, Cleveland Guardians, Cleveland Browns, Cleveland Cavaliers, Cleveland fans, 216, Cleveland Ohio sports" />
 <meta name="author" content="White Knuckle City" />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 <meta name="theme-color" content="#0b0d10" />
-<link rel="canonical" href="https://whiteknucklecity.com/" />
+
+<!-- Geo (Cleveland, Ohio) -->
+<meta name="geo.region" content="US-OH" />
+<meta name="geo.placename" content="Cleveland, Ohio" />
+<meta name="geo.position" content="41.4993;-81.6944" />
+<meta name="ICBM" content="41.4993, -81.6944" />
+
+<!-- ============ Icons / manifest ============ -->
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/assets/icon-180.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<!-- STOPGAP: canonical/OG point at the live Worker URL while whiteknucklecity.com
+     is still returning SSL 525. When the custom domain is attached, swap every
+     white-knuckle-city.bill-burkey.workers.dev back to whiteknucklecity.com
+     (here + sitemap.xml, robots.txt, llms.txt, and SITE in src/index.js). -->
+<link rel="canonical" href="https://white-knuckle-city.bill-burkey.workers.dev/" />
+<link rel="alternate" hreflang="en" href="https://white-knuckle-city.bill-burkey.workers.dev/" />
+<link rel="alternate" hreflang="x-default" href="https://white-knuckle-city.bill-burkey.workers.dev/" />
 
 <!-- ============ Open Graph / social ============ -->
 <meta property="og:site_name" content="White Knuckle City" />
 <meta property="og:title" content="White Knuckle City — Cleveland, Ohio" />
 <meta property="og:description" content="Cleveland, Ohio. Where the lead is never safe and the ninth inning is a contact sport. Guardians, Browns, Cavaliers." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://whiteknucklecity.com/" />
-<meta property="og:image" content="https://whiteknucklecity.com/assets/og-image.png" />
+<meta property="og:url" content="https://white-knuckle-city.bill-burkey.workers.dev/" />
+<meta property="og:image" content="https://white-knuckle-city.bill-burkey.workers.dev/assets/og-image.png" />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="White Knuckle City — Cleveland, Ohio. Guardians, Browns, Cavaliers." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://white-knuckle-city.bill-burkey.workers.dev/" />
 <meta name="twitter:title" content="White Knuckle City — Cleveland, Ohio" />
 <meta name="twitter:description" content="Cleveland, Ohio. Where the lead is never safe and the ninth inning is a contact sport." />
-<meta name="twitter:image" content="https://whiteknucklecity.com/assets/og-image.png" />
+<meta name="twitter:image" content="https://white-knuckle-city.bill-burkey.workers.dev/assets/og-image.png" />
+<meta name="twitter:image:alt" content="White Knuckle City — Cleveland, Ohio. Guardians, Browns, Cavaliers." />
 
 <!-- ============ Structured data (SEO + AEO) ============ -->
 <script type="application/ld+json">
@@ -36,8 +58,9 @@
     {
       "@type": "WebSite",
       "@id": "https://whiteknucklecity.com/#website",
-      "url": "https://whiteknucklecity.com/",
+      "url": "https://white-knuckle-city.bill-burkey.workers.dev/",
       "name": "White Knuckle City",
+      "alternateName": "WKC",
       "description": "A nickname and love letter to Cleveland, Ohio sports fandom — the Guardians, Browns, and Cavaliers.",
       "inLanguage": "en-US",
       "publisher": { "@id": "https://whiteknucklecity.com/#org" }
@@ -46,14 +69,94 @@
       "@type": "Organization",
       "@id": "https://whiteknucklecity.com/#org",
       "name": "White Knuckle City",
-      "url": "https://whiteknucklecity.com/",
-      "logo": "https://whiteknucklecity.com/assets/wordmark-print-dark.png",
+      "url": "https://white-knuckle-city.bill-burkey.workers.dev/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://white-knuckle-city.bill-burkey.workers.dev/assets/wordmark-print-dark.png",
+        "width": 3000,
+        "height": 3000
+      },
       "slogan": "Grip tighter.",
+      "foundingLocation": { "@type": "City", "name": "Cleveland, Ohio" },
       "areaServed": { "@type": "City", "name": "Cleveland", "containedInPlace": { "@type": "State", "name": "Ohio" } }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://whiteknucklecity.com/#webpage",
+      "url": "https://white-knuckle-city.bill-burkey.workers.dev/",
+      "name": "White Knuckle City — Cleveland, Ohio | Guardians, Browns & Cavs",
+      "description": "White Knuckle City is a nickname for Cleveland, Ohio — home to the Guardians, Browns, and Cavaliers, and the most nerve-shredding fan experience in American sports.",
+      "isPartOf": { "@id": "https://whiteknucklecity.com/#website" },
+      "inLanguage": "en-US",
+      "datePublished": "2026-07-01",
+      "dateModified": "2026-07-01",
+      "primaryImageOfPage": { "@id": "https://whiteknucklecity.com/#ogimage" },
+      "about": [
+        { "@id": "https://whiteknucklecity.com/#guardians" },
+        { "@id": "https://whiteknucklecity.com/#browns" },
+        { "@id": "https://whiteknucklecity.com/#cavs" }
+      ],
+      "mainEntity": { "@id": "https://whiteknucklecity.com/#faq" },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".def-card", ".faq-item"]
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://whiteknucklecity.com/#ogimage",
+      "url": "https://white-knuckle-city.bill-burkey.workers.dev/assets/og-image.png",
+      "width": 1200,
+      "height": 630,
+      "caption": "White Knuckle City — Cleveland, Ohio. Guardians, Browns, Cavaliers."
+    },
+    {
+      "@type": "SportsTeam",
+      "@id": "https://whiteknucklecity.com/#guardians",
+      "name": "Cleveland Guardians",
+      "sport": "Baseball",
+      "memberOf": { "@type": "SportsOrganization", "name": "Major League Baseball", "alternateName": "MLB" },
+      "sameAs": ["https://en.wikipedia.org/wiki/Cleveland_Guardians", "https://www.mlb.com/guardians"]
+    },
+    {
+      "@type": "SportsTeam",
+      "@id": "https://whiteknucklecity.com/#browns",
+      "name": "Cleveland Browns",
+      "sport": "American Football",
+      "memberOf": { "@type": "SportsOrganization", "name": "National Football League", "alternateName": "NFL" },
+      "sameAs": ["https://en.wikipedia.org/wiki/Cleveland_Browns", "https://www.clevelandbrowns.com/"]
+    },
+    {
+      "@type": "SportsTeam",
+      "@id": "https://whiteknucklecity.com/#cavs",
+      "name": "Cleveland Cavaliers",
+      "sport": "Basketball",
+      "memberOf": { "@type": "SportsOrganization", "name": "National Basketball Association", "alternateName": "NBA" },
+      "sameAs": ["https://en.wikipedia.org/wiki/Cleveland_Cavaliers", "https://www.nba.com/cavaliers/"]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://whiteknucklecity.com/#moments",
+      "name": "How Cleveland earned the name White Knuckle City",
+      "description": "A partial, non-exhaustive field guide to the tense — and occasionally glorious — moments in Cleveland sports history.",
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
+      "numberOfItems": 9,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "1981 — Red Right 88", "description": "Frozen Municipal Stadium, playoffs. With a field goal to win it, the Browns threw instead. Interception in the end zone. Season over." },
+        { "@type": "ListItem", "position": 2, "name": "1987 — The Drive", "description": "98 yards, 5:32 on the clock, the AFC Championship in hand. John Elway marched the length of the field and took it to Denver." },
+        { "@type": "ListItem", "position": 3, "name": "1988 — The Fumble", "description": "Earnest Byner, eight yards from tying the AFC title game, loses the ball on the goal line — against Denver again." },
+        { "@type": "ListItem", "position": 4, "name": "1989 — The Shot", "description": "Michael Jordan over Craig Ehlo at the buzzer in Game 5, ending the Cavaliers' season." },
+        { "@type": "ListItem", "position": 5, "name": "1997 — Two Outs In The Ninth", "description": "The Cleveland Indians were one out from a World Series title in Game 7. The lead didn't survive the bottom of the ninth; the Marlins won it in extra innings." },
+        { "@type": "ListItem", "position": 6, "name": "2010 — The Decision", "description": "LeBron James announces he is leaving Cleveland for Miami in a prime-time television special." },
+        { "@type": "ListItem", "position": 7, "name": "2016 — The Release", "description": "Down 3–1 to a 73-win Warriors team, the Cavaliers won the NBA Finals — Cleveland's first major championship in 52 years." },
+        { "@type": "ListItem", "position": 8, "name": "2016 — …And Right Back Into It", "description": "Months later the Indians took a 3–1 World Series lead, then lost Game 7 in extra innings to the Chicago Cubs." },
+        { "@type": "ListItem", "position": 9, "name": "2017 — 0–16", "description": "The Browns finished a perfect winless season; fans held a parade anyway." }
+      ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://whiteknucklecity.com/#faq",
+      "isPartOf": { "@id": "https://whiteknucklecity.com/#webpage" },
       "mainEntity": [
         {
           "@type": "Question",
@@ -220,6 +323,18 @@
     .notify button { padding:13px; }
     section { padding:64px 0; }
   }
+
+  /* Respect users who ask for less motion: kill smooth-scroll, the bobbing cue,
+     the pulsing live dot, and the needle glide. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -258,8 +373,8 @@
       <div class="meter-shell">
         <div class="meter-label">Current Grip Level</div>
         <div class="meter-value" id="indexValue">—</div>
-        <div class="meter-state" id="indexState">Checking the scoreboard…</div>
-        <div class="meter-bar"><div class="meter-needle" id="needle"></div></div>
+        <div class="meter-state" id="indexState" role="status" aria-live="polite" aria-atomic="true">Checking the scoreboard…</div>
+        <div class="meter-bar" id="meterBar" role="meter" aria-label="White Knuckle Index" aria-valuemin="0" aria-valuemax="100"><div class="meter-needle" id="needle"></div></div>
       </div>
 
       <div class="teams">
@@ -439,6 +554,14 @@ const TEAMS = [
   { key:'cavs',      name:'Cavaliers', url:'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard' },
 ];
 
+// Escape values that come from the ESPN response before they touch innerHTML.
+// ESPN is trusted today, but third-party JSON must never be able to inject DOM markup.
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function setTeam(key, statusHtml, scoreText) {
   const s = document.getElementById('st-' + key);
   const sc = document.getElementById('sc-' + key);
@@ -475,7 +598,7 @@ function evaluate(ev) {
 
   if (stateName === 'pre') {
     const t = type.shortDetail || 'Scheduled';
-    return { tension:12, statusHtml:'Pregame · vs ' + oppName + '<br><span style="opacity:.7">' + t + '</span>', scoreText:'' };
+    return { tension:12, statusHtml:'Pregame · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'' };
   }
   if (stateName === 'post') {
     const won = cleScore > oppScore;
@@ -484,7 +607,7 @@ function evaluate(ev) {
   }
   const detail = type.shortDetail || type.detail || 'Live';
   const tension = computeLiveTension(cleScore, oppScore, ev, comp);
-  return { tension, statusHtml:'<span class="live-dot"></span>LIVE · ' + detail, scoreText };
+  return { tension, statusHtml:'<span class="live-dot"></span>LIVE · ' + esc(detail), scoreText };
 }
 
 function computeLiveTension(cle, opp, ev, comp) {
@@ -500,11 +623,13 @@ function drive(overall) {
   const val = document.getElementById('indexValue');
   const state = document.getElementById('indexState');
   const needle = document.getElementById('needle');
+  const bar = document.getElementById('meterBar');
   if (overall == null) {
     val.textContent = 'AT REST';
     val.style.fontSize = 'clamp(1.8rem,6vw,2.8rem)';
     state.textContent = 'No Cleveland teams playing right now. Rare footage.';
     needle.style.left = '6%';
+    if (bar) { bar.setAttribute('aria-valuenow', '0'); bar.setAttribute('aria-valuetext', 'At rest — no Cleveland game right now.'); }
     return;
   }
   val.textContent = overall + ' / 100';
@@ -516,6 +641,7 @@ function drive(overall) {
   else if (overall < 88) label = 'Full clench. Nobody speak.';
   else label = 'Maximum grip. Hold onto something solid.';
   state.textContent = label;
+  if (bar) { bar.setAttribute('aria-valuenow', String(overall)); bar.setAttribute('aria-valuetext', overall + ' of 100 — ' + label); }
 }
 
 async function loadTeam(t) {
@@ -539,12 +665,35 @@ async function loadIndex() {
   drive(overall);
 }
 
-function notifyMe(e) {
+async function notifyMe(e) {
   e.preventDefault();
   const note = document.getElementById('notifyNote');
   const email = document.getElementById('notifyEmail');
-  note.textContent = "You're on the list. We'll reach out when it drops.";
-  email.value = '';
+  const btn = e.target.querySelector('button');
+  const val = (email.value || '').trim();
+  if (!val) return false;
+  if (btn) btn.disabled = true;
+  note.textContent = 'Signing you up…';
+  try {
+    const res = await fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email: val }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      note.textContent = "You're in. Check your inbox — first crack at the drop, nothing else.";
+      email.value = '';
+    } else if (res.status === 422) {
+      note.textContent = 'That email looks off — mind checking it?';
+    } else {
+      note.textContent = 'Something jammed on our end. Give it another shot in a bit.';
+    }
+  } catch (_) {
+    note.textContent = 'Network hiccup — try that again in a moment.';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
   return false;
 }
 
