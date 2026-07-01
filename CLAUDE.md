@@ -4,9 +4,9 @@ A one-page statement site + live sports-tension tracker for Cleveland, Ohio spor
 (Guardians, Browns, Cavaliers). Tone: equal parts love letter and "here we go again" comedy.
 
 ## Live URLs
-- Production (Cloudflare Worker): https://white-knuckle-city.bill-burkey.workers.dev
-- Custom domain (in progress): https://whiteknucklecity.com  ← see "Custom domain" below
-- Registrar: GoDaddy. DNS/zone: Cloudflare account bill.burkey@ememetics.com
+- Production (Cloudflare Worker): https://whiteknucklecity.com  (also www.whiteknucklecity.com)
+- workers.dev URL is intentionally disabled (custom domain is the single canonical home).
+- Registrar: GoDaddy. DNS/zone: Cloudflare account bill.burkey@ememetics.com (zone 84c8d30bbd82ee2afa0d6e2a50e86119).
 
 ## Stack / architecture
 - **Cloudflare Worker with static assets** (migrated from Pages — Cloudflare now steers new
@@ -49,16 +49,13 @@ printf '%s' "re_..." | npx wrangler secret put RESEND_API_KEY
 ```
 The key was shared in plaintext during setup — consider rotating it in the Resend dashboard.
 
-## Custom domain (REMAINING — do this in a normal browser; the dashboard SPA hangs under automation)
-`whiteknucklecity.com` currently returns Cloudflare error 525 (SSL handshake failed): the apex is
-proxied through Cloudflare but not attached to a service, so there's no valid origin/cert.
-Fix:
-1. Cloudflare dashboard → Workers & Pages → `white-knuckle-city` (Worker) → Settings → Domains & Routes → Add custom domain.
-2. Enter `whiteknucklecity.com` (and optionally `www`). Let it REPLACE the conflicting apex DNS record.
-3. Cloudflare auto-provisions the cert; 525 clears within a few minutes.
-4. Then swap every `white-knuckle-city.bill-burkey.workers.dev` back to `https://whiteknucklecity.com/`:
-   `public/index.html` (canonical, hreflang, OG/Twitter, JSON-LD urls), `public/sitemap.xml`,
-   `public/robots.txt`, `public/llms.txt`, and `SITE` in `src/index.js`. Redeploy.
+## Custom domain (DONE)
+`whiteknucklecity.com` + `www` are attached to the Worker via the `routes` block in `wrangler.toml`
+(`custom_domain = true`), so `wrangler deploy` provisions the managed DNS records + certs. The old
+525 was caused by two proxied apex A records (GoDaddy parking IPs) — those and the old `www` CNAME
+were deleted; the Resend email records (MX/DKIM/SPF/DMARC) were left intact. All URLs point at the
+apex. If you ever move again, this is the swap list: `public/index.html`, `public/sitemap.xml`,
+`public/robots.txt`, `public/llms.txt`, and `SITE` in `src/index.js`.
 
 ## The White Knuckle Index (live meter)
 - Client-side JS in `public/index.html` fetches ESPN public scoreboard endpoints (no API key) for:
@@ -92,8 +89,13 @@ Fix:
 - Site shows SVG cap + tee mockups with "Coming Soon" badges. Wire real Printify product URLs into the buy buttons.
 
 ## Open TODOs
-1. Attach custom domain whiteknucklecity.com to the Worker (see above) — highest priority.
-2. Set up Printify products; replace "Coming Soon" with real buy links.
+1. Set up Printify products; replace "Coming Soon" with real buy links.
+2. Enable "Always Use HTTPS" (dashboard → SSL/TLS → Edge Certificates) so `http://` 301s to `https://`
+   — the DNS-only API token used for setup couldn't toggle zone settings. Optional; canonical already handles it.
 3. Optional: richer live-index logic (win probability, not just score margin).
-4. Optional: rotate the Resend API key (was shared in plaintext during setup).
-5. Optional: delete the now-unused `white-knuckle-city` **Pages** project (the earlier deploy) to avoid a duplicate live copy at `*.pages.dev`.
+4. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
+
+## Done (2026-07-01)
+- Migrated Pages → Worker; deleted the stale `white-knuckle-city` Pages project.
+- Wired merch signup to Resend (audience + confirmation email).
+- Attached custom domain (apex + www); repointed all URLs; SEO/AEO enrichment.

@@ -4,11 +4,10 @@
 //
 // RESEND_API_KEY is a Worker secret — it is NEVER stored in this repo.
 // AUDIENCE_ID and FROM are not secrets (useless without the key), so they live here.
-// When whiteknucklecity.com is attached, swap SITE to https://whiteknucklecity.com/.
 
 const AUDIENCE_ID = '9b31482a-1a9e-4a12-85d1-b911bbf24aa9';
 const FROM = 'White Knuckle City <noreply@whiteknucklecity.com>';
-const SITE = 'https://white-knuckle-city.bill-burkey.workers.dev';
+const SITE = 'https://whiteknucklecity.com';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const json = (obj, status = 200) =>

@@ -2,6 +2,12 @@ name = "white-knuckle-city"
 main = "src/index.js"
 compatibility_date = "2026-07-01"
 
+# Custom domains — wrangler provisions the managed DNS records + certs on deploy.
+routes = [
+  { pattern = "whiteknucklecity.com", custom_domain = true },
+  { pattern = "www.whiteknucklecity.com", custom_domain = true },
+]
+
 # Static site (index.html + assets) is served directly from ./public.
 # The Worker only runs for requests with no matching file — e.g. POST /api/notify.
 [assets]
