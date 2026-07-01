@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ============ SEO ============ -->
+<title>White Knuckle City — Cleveland, Ohio | Guardians, Browns &amp; Cavs</title>
+<meta name="description" content="White Knuckle City is a nickname for Cleveland, Ohio — home to the Guardians, Browns, and Cavaliers, and the most nerve-shredding fan experience in American sports. Live tension index plus a field guide to the heartbreak." />
+<meta name="keywords" content="White Knuckle City, Cleveland sports, Cleveland Guardians, Cleveland Browns, Cleveland Cavaliers, Cleveland fans, 216, Cleveland Ohio sports" />
+<meta name="author" content="White Knuckle City" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#0b0d10" />
+<link rel="canonical" href="https://whiteknucklecity.com/" />
+
+<!-- ============ Open Graph / social ============ -->
+<meta property="og:site_name" content="White Knuckle City" />
+<meta property="og:title" content="White Knuckle City — Cleveland, Ohio" />
+<meta property="og:description" content="Cleveland, Ohio. Where the lead is never safe and the ninth inning is a contact sport. Guardians, Browns, Cavaliers." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://whiteknucklecity.com/" />
+<meta property="og:image" content="https://whiteknucklecity.com/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="White Knuckle City — Cleveland, Ohio" />
+<meta name="twitter:description" content="Cleveland, Ohio. Where the lead is never safe and the ninth inning is a contact sport." />
+<meta name="twitter:image" content="https://whiteknucklecity.com/assets/og-image.png" />
+
+<!-- ============ Structured data (SEO + AEO) ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://whiteknucklecity.com/#website",
+      "url": "https://whiteknucklecity.com/",
+      "name": "White Knuckle City",
+      "description": "A nickname and love letter to Cleveland, Ohio sports fandom — the Guardians, Browns, and Cavaliers.",
+      "inLanguage": "en-US",
+      "publisher": { "@id": "https://whiteknucklecity.com/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://whiteknucklecity.com/#org",
+      "name": "White Knuckle City",
+      "url": "https://whiteknucklecity.com/",
+      "logo": "https://whiteknucklecity.com/assets/wordmark-print-dark.png",
+      "slogan": "Grip tighter.",
+      "areaServed": { "@type": "City", "name": "Cleveland", "containedInPlace": { "@type": "State", "name": "Ohio" } }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://whiteknucklecity.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is White Knuckle City?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "White Knuckle City is a nickname for Cleveland, Ohio, describing what it feels like to root for its teams. It refers to the white-knuckle tension Cleveland fans experience following the Guardians (MLB), Browns (NFL), and Cavaliers (NBA)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is Cleveland called White Knuckle City?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cleveland earned the nickname through decades of tense, heartbreaking sporting moments — including Red Right 88, The Drive, The Fumble, The Shot, and Game 7 losses. Even wins tend to arrive the hard way, keeping fans on edge until the final out or whistle."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which teams make Cleveland a white knuckle city?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The three major professional teams: the Cleveland Guardians in Major League Baseball, the Cleveland Browns in the NFL, and the Cleveland Cavaliers in the NBA."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the White Knuckle Index?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The White Knuckle Index is a live tension meter on whiteknucklecity.com that reads current Cleveland game scores and rates how nerve-wracking the moment is, from 0 (relaxed) to 100 (maximum grip)."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0b0d10;
+    --bg-2: #12151a;
+    --ink: #f4f1ea;
+    --muted: #9aa1ab;
+    --knuckle: #d7263d;
+    --knuckle-deep: #7d0f1e;
+    --guardians: #e31937;
+    --navy: #14213d;
+    --browns: #ff3c00;
+    --cavs: #860038;
+    --line: rgba(255,255,255,0.08);
+    --calm: #3ba776;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 90px 0; border-bottom: 1px solid var(--line); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; position: relative; padding: 40px 24px;
+    background: radial-gradient(1200px 600px at 50% -10%, rgba(215,38,61,0.18), transparent 60%),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow { font-family:'Roboto Slab',serif; letter-spacing:0.35em; text-transform:uppercase; font-size:0.72rem; color:var(--muted); margin-bottom:22px; }
+  .hero h1 {
+    font-family:'Anton',sans-serif; font-weight:400; line-height:0.9; letter-spacing:0.01em;
+    font-size: clamp(3.4rem, 13vw, 9.5rem); text-transform:uppercase;
+    background: linear-gradient(180deg,#fff 0%,#d7263d 140%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 0 60px rgba(215,38,61,0.25);
+  }
+  .hero .sub { font-family:'Roboto Slab',serif; font-size:clamp(1rem,2.4vw,1.5rem); letter-spacing:0.18em; text-transform:uppercase; margin-top:10px; }
+  .origin { max-width:600px; margin:34px auto 0; color:var(--muted); font-family:'Roboto Slab',serif; font-style:italic; font-size:clamp(0.95rem,2vw,1.12rem); }
+  .scroll-cue { position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--muted); font-size:0.7rem; letter-spacing:0.3em; text-transform:uppercase; animation:bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,8px);} }
+
+  /* DEFINITION */
+  .def { background:var(--bg); }
+  .def-card { border-left:4px solid var(--knuckle); padding:4px 0 4px 28px; }
+  .def .term { font-family:'Anton',sans-serif; font-size:clamp(2rem,6vw,3.4rem); text-transform:lowercase; letter-spacing:0.01em; }
+  .def .pos { color:var(--muted); font-style:italic; font-family:'Roboto Slab',serif; margin-left:6px; font-size:0.5em; }
+  .def ol { list-style:none; margin-top:18px; }
+  .def ol li { padding:10px 0; border-bottom:1px dashed var(--line); font-size:clamp(1rem,2.2vw,1.2rem); }
+  .def ol li b { color:var(--knuckle); font-family:'Roboto Slab',serif; margin-right:8px; }
+
+  /* LIVE INDEX */
+  .index-head { text-align:center; margin-bottom:40px; }
+  h2.kicker { font-family:'Anton',sans-serif; text-transform:uppercase; font-size:clamp(1.8rem,5vw,3rem); letter-spacing:0.02em; }
+  .index-head p { color:var(--muted); max-width:560px; margin:12px auto 0; }
+  .meter-shell { max-width:620px; margin:0 auto 42px; background:var(--bg-2); border:1px solid var(--line); border-radius:16px; padding:26px 26px 30px; text-align:center; }
+  .meter-label { font-family:'Roboto Slab',serif; letter-spacing:0.2em; text-transform:uppercase; font-size:0.72rem; color:var(--muted); }
+  .meter-value { font-family:'Anton',sans-serif; font-size:clamp(2.6rem,9vw,4.4rem); line-height:1; margin:8px 0 4px; }
+  .meter-state { color:var(--muted); font-family:'Roboto Slab',serif; font-style:italic; min-height:1.4em; }
+  .meter-bar { height:16px; border-radius:10px; margin-top:20px; overflow:hidden; background:linear-gradient(90deg,var(--calm) 0%,#d8b33a 45%,var(--knuckle) 78%,var(--knuckle-deep) 100%); position:relative; }
+  .meter-needle { position:absolute; top:-5px; width:4px; height:26px; background:#fff; border-radius:3px; box-shadow:0 0 8px rgba(0,0,0,0.6); left:0%; transition:left 0.8s cubic-bezier(.2,.8,.2,1); }
+  .teams { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:720px; margin:0 auto; }
+  .team { background:var(--bg-2); border:1px solid var(--line); border-radius:14px; padding:18px 16px; text-align:center; position:relative; overflow:hidden; }
+  .team::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent,var(--muted)); }
+  .team.guardians{ --accent:var(--guardians); } .team.browns{ --accent:var(--browns); } .team.cavs{ --accent:var(--cavs); }
+  .team .name { font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.04em; font-size:1.1rem; }
+  .team .status { color:var(--muted); font-size:0.82rem; margin-top:8px; min-height:2.6em; }
+  .team .score { font-family:'Roboto Slab',serif; font-weight:600; font-size:1.05rem; margin-top:6px; }
+  .live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--knuckle); margin-right:6px; animation:pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+  .disclaimer { text-align:center; color:var(--muted); font-size:0.75rem; margin-top:26px; }
+
+  /* MOMENTS */
+  .moments { background:var(--bg); }
+  .timeline { max-width:760px; margin:40px auto 0; position:relative; }
+  .timeline::before { content:''; position:absolute; left:14px; top:0; bottom:0; width:2px; background:linear-gradient(180deg,var(--knuckle),var(--knuckle-deep)); }
+  .moment { position:relative; padding:0 0 34px 52px; }
+  .moment::before { content:''; position:absolute; left:7px; top:5px; width:16px; height:16px; border-radius:50%; background:var(--bg); border:3px solid var(--knuckle); }
+  .moment .yr { font-family:'Anton',sans-serif; color:var(--knuckle); font-size:1.15rem; letter-spacing:0.05em; }
+  .moment .ttl { font-weight:700; font-size:1.1rem; margin-top:2px; }
+  .moment .desc { color:var(--muted); margin-top:4px; }
+  .moment .quip { color:var(--ink); font-style:italic; font-family:'Roboto Slab',serif; margin-top:6px; opacity:0.8; }
+  .moment.release::before { border-color:var(--calm); }
+  .moment.release .yr { color:var(--calm); }
+
+  /* MERCH */
+  .merch { background:linear-gradient(180deg,var(--bg-2),var(--bg)); text-align:center; }
+  .merch-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; max-width:680px; margin:40px auto 0; }
+  .merch-card { border:1px solid var(--line); border-radius:16px; padding:26px 22px 30px; background:var(--bg); display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .merch-card svg { width:100%; max-width:240px; height:auto; }
+  .merch-card .m-name { font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.04em; font-size:1.3rem; }
+  .merch-card .m-sub { color:var(--muted); font-size:0.9rem; }
+  .soon { display:inline-block; margin-top:4px; font-family:'Roboto Slab',serif; font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--knuckle); border:1px solid var(--knuckle); border-radius:999px; padding:5px 14px; }
+  .notify { max-width:420px; margin:38px auto 0; }
+  .notify form { display:flex; gap:10px; }
+  .notify input { flex:1; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:13px 16px; color:var(--ink); font-size:0.95rem; }
+  .notify input:focus { outline:none; border-color:var(--knuckle); }
+  .notify button { background:var(--knuckle); color:#fff; border:none; border-radius:10px; padding:0 20px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
+  .notify button:hover { background:var(--knuckle-deep); }
+  .notify .note { color:var(--muted); font-size:0.75rem; margin-top:10px; }
+
+  /* FAQ */
+  .faq { background:var(--bg); }
+  .faq-list { max-width:760px; margin:34px auto 0; }
+  .faq-item { border-bottom:1px solid var(--line); padding:22px 0; }
+  .faq-item h3 { font-family:'Roboto Slab',serif; font-size:1.12rem; margin-bottom:8px; }
+  .faq-item p { color:var(--muted); }
+
+  /* FOOTER */
+  footer { padding:60px 24px 70px; text-align:center; background:var(--bg); border-top:1px solid var(--line); }
+  footer .fk { font-family:'Anton',sans-serif; font-size:1.4rem; letter-spacing:0.04em; text-transform:uppercase; }
+  footer .origin-nod { color:var(--muted); font-style:italic; font-family:'Roboto Slab',serif; max-width:520px; margin:14px auto 0; font-size:0.92rem; }
+  footer .fine { color:var(--muted); font-size:0.72rem; margin-top:22px; opacity:0.7; }
+
+  @media (max-width:640px) {
+    .teams { grid-template-columns:1fr; }
+    .merch-grid { grid-template-columns:1fr; }
+    .notify form { flex-direction:column; }
+    .notify button { padding:13px; }
+    section { padding:64px 0; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="eyebrow">Cleveland, Ohio</p>
+    <h1>White<br>Knuckle<br>City</h1>
+    <p class="sub">Guardians &nbsp;·&nbsp; Browns &nbsp;·&nbsp; Cavaliers</p>
+    <p class="origin">Born on a Cleveland broadcast, the way most Cleveland truths are — said out loud over the air one tense night, when everybody listening already had it in their hands.</p>
+    <div class="scroll-cue">Grip Tighter ↓</div>
+  </header>
+
+  <!-- DEFINITION -->
+  <section class="def" aria-label="Definition">
+    <div class="wrap">
+      <div class="def-card">
+        <h2 class="term">white knuckle city<span class="pos">noun · \ˈhwīt-ˈnə-kəl-ˈsi-tē\</span></h2>
+        <ol>
+          <li><b>1.</b> Cleveland, Ohio.</li>
+          <li><b>2.</b> The involuntary tightening of a hand around a steering wheel or a couch cushion, brought on by a two-run lead in the seventh that nobody here trusts.</li>
+          <li><b>3.</b> A condition you're born into. There is no cure. There is only next season.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE INDEX -->
+  <section class="index" id="index" aria-label="White Knuckle Index">
+    <div class="wrap">
+      <div class="index-head">
+        <h2 class="kicker">The White Knuckle Index</h2>
+        <p>How tense is Cleveland right now? Live from the Guardians, Browns, and Cavs. Green means breathe. Red means you already know.</p>
+      </div>
+
+      <div class="meter-shell">
+        <div class="meter-label">Current Grip Level</div>
+        <div class="meter-value" id="indexValue">—</div>
+        <div class="meter-state" id="indexState">Checking the scoreboard…</div>
+        <div class="meter-bar"><div class="meter-needle" id="needle"></div></div>
+      </div>
+
+      <div class="teams">
+        <div class="team guardians"><div class="name">Guardians</div><div class="status" id="st-guardians">Loading…</div><div class="score" id="sc-guardians"></div></div>
+        <div class="team browns"><div class="name">Browns</div><div class="status" id="st-browns">Loading…</div><div class="score" id="sc-browns"></div></div>
+        <div class="team cavs"><div class="name">Cavaliers</div><div class="status" id="st-cavs">Loading…</div><div class="score" id="sc-cavs"></div></div>
+      </div>
+      <p class="disclaimer">Live data via public ESPN scoreboards. No game today means Cleveland is only bracing, not clenching.</p>
+    </div>
+  </section>
+
+  <!-- MOMENTS -->
+  <section class="moments" aria-label="Cleveland sports history">
+    <div class="wrap">
+      <div class="index-head">
+        <h2 class="kicker">How We Earned The Name</h2>
+        <p>A partial, non-exhaustive field guide to the moments that taught Cleveland to clench.</p>
+      </div>
+      <div class="timeline">
+        <div class="moment">
+          <div class="yr">1981</div>
+          <div class="ttl">Red Right 88</div>
+          <div class="desc">Frozen Municipal Stadium, playoffs. With a field goal to win it, the Browns threw instead. Interception in the end zone. Season over.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">1987</div>
+          <div class="ttl">The Drive</div>
+          <div class="desc">98 yards, 5:32 on the clock, the AFC Championship in hand. Elway marched the length of the field and took it to Denver.</div>
+          <div class="quip">We had it. That's usually the problem.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">1988</div>
+          <div class="ttl">The Fumble</div>
+          <div class="desc">Earnest Byner, eight yards from tying the AFC title game, loses it on the goal line. Two years running against the same team.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">1989</div>
+          <div class="ttl">The Shot</div>
+          <div class="desc">Michael Jordan over Craig Ehlo at the buzzer, Game 5. The freeze-frame of him hanging in the air is required footage in every Cleveland sports documentary.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">1997</div>
+          <div class="ttl">Two Outs In The Ninth</div>
+          <div class="desc">The Indians were one out from a World Series title in Game 7. The lead didn't survive the bottom of the ninth. The Marlins won it in extras.</div>
+          <div class="quip">Three outs from heaven. None of them came.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">2010</div>
+          <div class="ttl">The Decision</div>
+          <div class="desc">"I'm going to take my talents to South Beach." A prime-time television special. Some jerseys did not survive the night.</div>
+        </div>
+        <div class="moment release">
+          <div class="yr">2016 · The Release</div>
+          <div class="ttl">Cavs. Champions. 3–1.</div>
+          <div class="desc">Down 3–1 to a 73-win Warriors team. The Block, the Shot, and 52 years of drought gone in a single night. For one summer, the knuckles went pink again.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">2016</div>
+          <div class="ttl">…And Right Back Into It</div>
+          <div class="desc">Four months later the Indians took a 3–1 World Series lead, then Game 7, extra innings, a rain delay for effect. Cubs win.</div>
+          <div class="quip">The only city that can win 3–1 and lose 3–1 in the same year.</div>
+        </div>
+        <div class="moment">
+          <div class="yr">2017</div>
+          <div class="ttl">0–16</div>
+          <div class="desc">The Browns finished a perfect winless season. Fans held a parade for it. You have to grip something even when there's nothing left to hold.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MERCH -->
+  <section class="merch" id="merch" aria-label="Merch">
+    <div class="wrap">
+      <div class="index-head">
+        <h2 class="kicker">Wear The Clench</h2>
+        <p>Put it on your head. Put it on your chest. The right people won't need it explained.</p>
+      </div>
+      <div class="merch-grid">
+
+        <!-- CAP MOCKUP -->
+        <div class="merch-card">
+          <svg viewBox="0 0 260 200" role="img" aria-label="Navy cap with White Knuckle City wordmark">
+            <defs><linearGradient id="capg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#1b2c4d"/><stop offset="1" stop-color="#101d36"/>
+            </linearGradient></defs>
+            <!-- brim -->
+            <path d="M40 150 Q120 132 214 156 Q220 176 150 178 Q70 180 40 150 Z" fill="#0d1526"/>
+            <!-- crown -->
+            <path d="M56 148 Q52 74 130 62 Q210 74 200 148 Q130 132 56 148 Z" fill="url(#capg)"/>
+            <!-- panel seams -->
+            <path d="M130 62 L128 138" stroke="#0d1526" stroke-width="2" opacity="0.5"/>
+            <path d="M96 66 Q98 108 100 140" stroke="#0d1526" stroke-width="1.5" opacity="0.35" fill="none"/>
+            <path d="M164 66 Q162 108 160 140" stroke="#0d1526" stroke-width="1.5" opacity="0.35" fill="none"/>
+            <!-- button -->
+            <circle cx="130" cy="66" r="4" fill="#0d1526"/>
+            <!-- wordmark -->
+            <text x="130" y="100" text-anchor="middle" font-family="Anton, sans-serif" font-size="13" fill="#f4f1ea" letter-spacing="0.3" textLength="112" lengthAdjust="spacingAndGlyphs">WHITE KNUCKLE</text>
+            <text x="130" y="120" text-anchor="middle" font-family="Anton, sans-serif" font-size="14" fill="#d7263d" letter-spacing="1.5">CITY</text>
+          </svg>
+          <div class="m-name">The Cap</div>
+          <div class="m-sub">Structured navy. For gripping the brim in the ninth.</div>
+          <span class="soon">Coming Soon</span>
+        </div>
+
+        <!-- TEE MOCKUP -->
+        <div class="merch-card">
+          <svg viewBox="0 0 260 220" role="img" aria-label="Charcoal t-shirt with White Knuckle City wordmark">
+            <defs><linearGradient id="teeg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2c3037"/><stop offset="1" stop-color="#232529"/>
+            </linearGradient></defs>
+            <!-- tee body + sleeves -->
+            <path d="M96 30 L74 24 L34 52 L54 84 L74 72 L72 196 Q130 204 188 196 L186 72 L206 84 L226 52 L186 24 L164 30 Q130 46 96 30 Z" fill="url(#teeg)" stroke="#1a1c20" stroke-width="1.5"/>
+            <!-- collar -->
+            <path d="M96 30 Q130 52 164 30 Q146 40 130 40 Q114 40 96 30 Z" fill="#1a1c20"/>
+            <!-- chest print -->
+            <text x="130" y="112" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#f4f1ea" letter-spacing="0.5">WHITE</text>
+            <text x="130" y="134" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#f4f1ea" letter-spacing="0.5">KNUCKLE</text>
+            <text x="130" y="156" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#d7263d" letter-spacing="1.5">CITY</text>
+          </svg>
+          <div class="m-name">The Tee</div>
+          <div class="m-sub">Vintage charcoal. Soft enough to sweat through by the stretch.</div>
+          <span class="soon">Coming Soon</span>
+        </div>
+
+      </div>
+      <div class="notify">
+        <form onsubmit="return notifyMe(event)">
+          <input type="email" id="notifyEmail" placeholder="Email me when it drops" required aria-label="Email address" />
+          <button type="submit">Notify Me</button>
+        </form>
+        <p class="note" id="notifyNote">First crack at the drop. Nothing else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (visible + AEO) -->
+  <section class="faq" id="faq" aria-label="Frequently asked questions">
+    <div class="wrap">
+      <div class="index-head"><h2 class="kicker">The Short Version</h2></div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>What is White Knuckle City?</h3>
+          <p>A nickname for Cleveland, Ohio — shorthand for what it feels like to root for its teams. The white knuckles come standard with the Guardians, Browns, and Cavaliers.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Why is Cleveland called White Knuckle City?</h3>
+          <p>Decades of tense, late, heartbreaking finishes — Red Right 88, The Drive, The Fumble, The Shot, Game 7 losses. Even the wins tend to arrive the hard way, so the tension holds until the final out.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Which teams make Cleveland a white knuckle city?</h3>
+          <p>The Cleveland Guardians (MLB), the Cleveland Browns (NFL), and the Cleveland Cavaliers (NBA).</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the White Knuckle Index?</h3>
+          <p>A live tension meter on this site. It reads the current Cleveland scores and rates the moment from 0 (relaxed) to 100 (maximum grip).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="fk">White Knuckle City</div>
+    <p class="origin-nod">The phrase wasn't invented here. It was overheard here — the way the best Cleveland truths are, crackling out of a radio on a warm night when the game got close and somebody said out loud what the whole city already felt.</p>
+    <p class="fine">whiteknucklecity.com · Made in the 216 · Not affiliated with any team, league, or broadcaster. Just the feeling.</p>
+  </footer>
+
+<script>
+/* White Knuckle Index — reads today's Guardians (MLB), Browns (NFL), Cavs (NBA)
+   from ESPN public scoreboards client-side, computes a 0-100 tension score,
+   and drives the needle. Fails gracefully when there's no game or no network. */
+
+const TEAMS = [
+  { key:'guardians', name:'Guardians', url:'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard' },
+  { key:'browns',    name:'Browns',    url:'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard' },
+  { key:'cavs',      name:'Cavaliers', url:'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard' },
+];
+
+function setTeam(key, statusHtml, scoreText) {
+  const s = document.getElementById('st-' + key);
+  const sc = document.getElementById('sc-' + key);
+  if (s) s.innerHTML = statusHtml;
+  if (sc) sc.textContent = scoreText || '';
+}
+
+function findClevelandEvent(data) {
+  if (!data || !Array.isArray(data.events)) return null;
+  for (const ev of data.events) {
+    const comp = ev.competitions && ev.competitions[0];
+    if (!comp) continue;
+    const hasCle = (comp.competitors || []).some(c =>
+      c.team && (c.team.abbreviation === 'CLE' || /cleveland/i.test(c.team.displayName || '')));
+    if (hasCle) return ev;
+  }
+  return null;
+}
+
+function evaluate(ev) {
+  if (!ev) return { tension:null, statusHtml:'No game today.', scoreText:'' };
+  const comp = ev.competitions[0];
+  const st = ev.status || comp.status || {};
+  const type = st.type || {};
+  const stateName = type.state; // 'pre' | 'in' | 'post'
+  const competitors = comp.competitors || [];
+  const cle = competitors.find(c => c.team && (c.team.abbreviation === 'CLE' || /cleveland/i.test(c.team.displayName||'')));
+  const opp = competitors.find(c => c !== cle);
+  const cleScore = cle ? parseInt(cle.score, 10) : NaN;
+  const oppScore = opp ? parseInt(opp.score, 10) : NaN;
+  const oppName = opp && opp.team ? (opp.team.shortDisplayName || opp.team.name || 'Opponent') : 'Opponent';
+  const oppAbbr = opp && opp.team ? opp.team.abbreviation : '';
+  const scoreText = (!isNaN(cleScore) && !isNaN(oppScore)) ? ('CLE ' + cleScore + ' — ' + oppScore + ' ' + oppAbbr) : '';
+
+  if (stateName === 'pre') {
+    const t = type.shortDetail || 'Scheduled';
+    return { tension:12, statusHtml:'Pregame · vs ' + oppName + '<br><span style="opacity:.7">' + t + '</span>', scoreText:'' };
+  }
+  if (stateName === 'post') {
+    const won = cleScore > oppScore;
+    const msg = won ? 'Final · Cleveland wins. Unclench.' : 'Final · Cleveland falls. There\'s always next season.';
+    return { tension: won ? 5 : 30, statusHtml:'<b>' + msg + '</b>', scoreText };
+  }
+  const detail = type.shortDetail || type.detail || 'Live';
+  const tension = computeLiveTension(cleScore, oppScore, ev, comp);
+  return { tension, statusHtml:'<span class="live-dot"></span>LIVE · ' + detail, scoreText };
+}
+
+function computeLiveTension(cle, opp, ev, comp) {
+  let base = 50;
+  const margin = (isNaN(cle) || isNaN(opp)) ? 5 : Math.abs(cle - opp);
+  base += Math.max(-30, 35 - margin * 7);
+  const period = (comp.status && comp.status.period) || (ev.status && ev.status.period) || 0;
+  base += Math.min(period * 3, 18);
+  return Math.max(3, Math.min(100, Math.round(base)));
+}
+
+function drive(overall) {
+  const val = document.getElementById('indexValue');
+  const state = document.getElementById('indexState');
+  const needle = document.getElementById('needle');
+  if (overall == null) {
+    val.textContent = 'AT REST';
+    val.style.fontSize = 'clamp(1.8rem,6vw,2.8rem)';
+    state.textContent = 'No Cleveland teams playing right now. Rare footage.';
+    needle.style.left = '6%';
+    return;
+  }
+  val.textContent = overall + ' / 100';
+  needle.style.left = Math.max(2, Math.min(98, overall)) + '%';
+  let label;
+  if (overall < 20) label = 'Loose grip. Cleveland can almost relax.';
+  else if (overall < 45) label = 'Palms warming up. Something is brewing.';
+  else if (overall < 70) label = 'Knuckles paling. Do not leave the room.';
+  else if (overall < 88) label = 'Full clench. Nobody speak.';
+  else label = 'Maximum grip. Hold onto something solid.';
+  state.textContent = label;
+}
+
+async function loadTeam(t) {
+  try {
+    const res = await fetch(t.url, { cache:'no-store' });
+    if (!res.ok) throw new Error('bad status ' + res.status);
+    const data = await res.json();
+    const r = evaluate(findClevelandEvent(data));
+    setTeam(t.key, r.statusHtml, r.scoreText);
+    return r.tension;
+  } catch (e) {
+    setTeam(t.key, '<span style="opacity:.6">Scoreboard unavailable.</span>', '');
+    return null;
+  }
+}
+
+async function loadIndex() {
+  const results = await Promise.all(TEAMS.map(loadTeam));
+  const active = results.filter(v => typeof v === 'number');
+  const overall = active.length ? Math.max.apply(null, active) : null;
+  drive(overall);
+}
+
+function notifyMe(e) {
+  e.preventDefault();
+  const note = document.getElementById('notifyNote');
+  const email = document.getElementById('notifyEmail');
+  note.textContent = "You're on the list. We'll reach out when it drops.";
+  email.value = '';
+  return false;
+}
+
+loadIndex();
+setInterval(loadIndex, 60000);
+</script>
+</body>
+</html>

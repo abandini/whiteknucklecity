@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1600" width="1600" height="1600">
+  <!-- Print-ready White Knuckle City wordmark. Light ink for dark garments. Transparent background. -->
+  <defs>
+    <style>
+      .stack { font-family: 'DejaVu Sans Condensed','Arial Narrow',sans-serif; font-weight: bold; fill: #f4f1ea; }
+      .small { font-family: 'DejaVu Sans Condensed',sans-serif; font-weight: bold; fill: #f4f1ea; }
+      .red { fill: #d7263d; }
+    </style>
+  </defs>
+
+  <!-- top eyebrow -->
+  <text x="800" y="430" text-anchor="middle" class="small" font-size="70" letter-spacing="28">CLEVELAND, OHIO</text>
+  <!-- rule with center tick -->
+  <line x1="360" y1="470" x2="1240" y2="470" stroke="#d7263d" stroke-width="6"/>
+  <rect x="784" y="454" width="32" height="32" transform="rotate(45 800 470)" class="red"/>
+
+  <!-- main stack -->
+  <text x="800" y="720" text-anchor="middle" class="stack" font-size="290" letter-spacing="4" textLength="900" lengthAdjust="spacingAndGlyphs">WHITE</text>
+  <text x="800" y="980" text-anchor="middle" class="stack" font-size="290" letter-spacing="4" textLength="1180" lengthAdjust="spacingAndGlyphs">KNUCKLE</text>
+  <text x="800" y="1240" text-anchor="middle" class="stack red" font-size="290" letter-spacing="4" textLength="720" lengthAdjust="spacingAndGlyphs">CITY</text>
+
+  <!-- bottom rule + tagline -->
+  <line x1="360" y1="1300" x2="1240" y2="1300" stroke="#f4f1ea" stroke-width="4" opacity="0.55"/>
+  <text x="800" y="1380" text-anchor="middle" class="small" font-size="62" letter-spacing="24" opacity="0.9">GRIP TIGHTER</text>
+</svg>
