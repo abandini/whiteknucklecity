@@ -288,7 +288,7 @@
   .merch { background:linear-gradient(180deg,var(--bg-2),var(--bg)); text-align:center; }
   .merch-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; max-width:680px; margin:40px auto 0; }
   .merch-card { border:1px solid var(--line); border-radius:16px; padding:26px 22px 30px; background:var(--bg); display:flex; flex-direction:column; align-items:center; gap:12px; }
-  .merch-card svg { width:100%; max-width:240px; height:auto; }
+  .merch-card svg, .merch-card img { width:100%; max-width:300px; height:auto; display:block; }
   .merch-card .m-name { font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.04em; font-size:1.3rem; }
   .merch-card .m-sub { color:var(--muted); font-size:0.9rem; }
   .soon { display:inline-block; margin-top:4px; font-family:'Roboto Slab',serif; font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--knuckle); border:1px solid var(--knuckle); border-radius:999px; padding:5px 14px; }
@@ -454,24 +454,8 @@
 
         <!-- CAP MOCKUP -->
         <div class="merch-card">
-          <svg viewBox="0 0 260 200" role="img" aria-label="Navy cap with White Knuckle City wordmark">
-            <defs><linearGradient id="capg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#1b2c4d"/><stop offset="1" stop-color="#101d36"/>
-            </linearGradient></defs>
-            <!-- brim -->
-            <path d="M40 150 Q120 132 214 156 Q220 176 150 178 Q70 180 40 150 Z" fill="#0d1526"/>
-            <!-- crown -->
-            <path d="M56 148 Q52 74 130 62 Q210 74 200 148 Q130 132 56 148 Z" fill="url(#capg)"/>
-            <!-- panel seams -->
-            <path d="M130 62 L128 138" stroke="#0d1526" stroke-width="2" opacity="0.5"/>
-            <path d="M96 66 Q98 108 100 140" stroke="#0d1526" stroke-width="1.5" opacity="0.35" fill="none"/>
-            <path d="M164 66 Q162 108 160 140" stroke="#0d1526" stroke-width="1.5" opacity="0.35" fill="none"/>
-            <!-- button -->
-            <circle cx="130" cy="66" r="4" fill="#0d1526"/>
-            <!-- wordmark -->
-            <text x="130" y="100" text-anchor="middle" font-family="Anton, sans-serif" font-size="13" fill="#f4f1ea" letter-spacing="0.3" textLength="112" lengthAdjust="spacingAndGlyphs">WHITE KNUCKLE</text>
-            <text x="130" y="120" text-anchor="middle" font-family="Anton, sans-serif" font-size="14" fill="#d7263d" letter-spacing="1.5">CITY</text>
-          </svg>
+          <img src="/assets/merch-cap.webp" width="380" height="380" loading="lazy" decoding="async"
+               alt="Navy structured baseball cap embroidered with the White Knuckle City wordmark — WHITE KNUCKLE in cream, CITY in red." />
           <div class="m-name">The Cap</div>
           <div class="m-sub">Structured navy. For gripping the brim in the ninth.</div>
           <span class="soon">Coming Soon</span>
@@ -479,19 +463,8 @@
 
         <!-- TEE MOCKUP -->
         <div class="merch-card">
-          <svg viewBox="0 0 260 220" role="img" aria-label="Charcoal t-shirt with White Knuckle City wordmark">
-            <defs><linearGradient id="teeg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#2c3037"/><stop offset="1" stop-color="#232529"/>
-            </linearGradient></defs>
-            <!-- tee body + sleeves -->
-            <path d="M96 30 L74 24 L34 52 L54 84 L74 72 L72 196 Q130 204 188 196 L186 72 L206 84 L226 52 L186 24 L164 30 Q130 46 96 30 Z" fill="url(#teeg)" stroke="#1a1c20" stroke-width="1.5"/>
-            <!-- collar -->
-            <path d="M96 30 Q130 52 164 30 Q146 40 130 40 Q114 40 96 30 Z" fill="#1a1c20"/>
-            <!-- chest print -->
-            <text x="130" y="112" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#f4f1ea" letter-spacing="0.5">WHITE</text>
-            <text x="130" y="134" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#f4f1ea" letter-spacing="0.5">KNUCKLE</text>
-            <text x="130" y="156" text-anchor="middle" font-family="Anton, sans-serif" font-size="19" fill="#d7263d" letter-spacing="1.5">CITY</text>
-          </svg>
+          <img src="/assets/merch-tee.webp" width="380" height="380" loading="lazy" decoding="async"
+               alt="Heather charcoal t-shirt with a stacked chest print — WHITE KNUCKLE in cream and CITY in red." />
           <div class="m-name">The Tee</div>
           <div class="m-sub">Vintage charcoal. Soft enough to sweat through by the stretch.</div>
           <span class="soon">Coming Soon</span>
