@@ -15,6 +15,9 @@ directory = "./public"
 binding = "ASSETS"
 # Serve the branded 404 for any unmatched path.
 not_found_handling = "404-page"
+# Without this, requests matching a static file bypass the Worker entirely —
+# which silently disables the redirects and security headers in src/index.js.
+run_worker_first = true
 
 # RESEND_API_KEY is set as a secret (never committed):
 #   npx wrangler secret put RESEND_API_KEY

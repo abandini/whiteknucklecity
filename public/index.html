@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- ============ SEO ============ -->
-<title>White Knuckle City — Cleveland, Ohio | Guardians, Browns &amp; Cavs</title>
-<meta name="description" content="White Knuckle City is a nickname for Cleveland, Ohio — home to the Guardians, Browns, and Cavaliers, and the most nerve-shredding fan experience in American sports. Live tension index plus a field guide to the heartbreak." />
+<title>White Knuckle City — Cleveland's Guardians, Browns &amp; Cavs</title>
+<meta name="description" content="White Knuckle City is a nickname for Cleveland, Ohio — home of the Guardians, Browns, and Cavaliers — plus a live index of how tense the city is right now." />
 <meta name="keywords" content="White Knuckle City, Cleveland sports, Cleveland Guardians, Cleveland Browns, Cleveland Cavaliers, Cleveland fans, 216, Cleveland Ohio sports" />
 <meta name="author" content="White Knuckle City" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -81,12 +81,12 @@
       "@type": "WebPage",
       "@id": "https://whiteknucklecity.com/#webpage",
       "url": "https://whiteknucklecity.com/",
-      "name": "White Knuckle City — Cleveland, Ohio | Guardians, Browns & Cavs",
-      "description": "White Knuckle City is a nickname for Cleveland, Ohio — home to the Guardians, Browns, and Cavaliers, and the most nerve-shredding fan experience in American sports.",
+      "name": "White Knuckle City — Cleveland's Guardians, Browns & Cavs",
+      "description": "White Knuckle City is a nickname for Cleveland, Ohio — home of the Guardians, Browns, and Cavaliers — plus a live index of how tense the city is right now.",
       "isPartOf": { "@id": "https://whiteknucklecity.com/#website" },
       "inLanguage": "en-US",
       "datePublished": "2026-07-01",
-      "dateModified": "2026-07-01",
+      "dateModified": "2026-07-02",
       "primaryImageOfPage": { "@id": "https://whiteknucklecity.com/#ogimage" },
       "about": [
         { "@id": "https://whiteknucklecity.com/#guardians" },
@@ -259,7 +259,10 @@
   .meter-value { font-family:'Anton',sans-serif; font-size:clamp(2.6rem,9vw,4.4rem); line-height:1; margin:8px 0 4px; }
   .meter-state { color:var(--muted); font-family:'Roboto Slab',serif; font-style:italic; min-height:1.4em; }
   .meter-bar { height:16px; border-radius:10px; margin-top:20px; overflow:hidden; background:linear-gradient(90deg,var(--calm) 0%,#d8b33a 45%,var(--knuckle) 78%,var(--knuckle-deep) 100%); position:relative; }
-  .meter-needle { position:absolute; top:-5px; width:4px; height:26px; background:#fff; border-radius:3px; box-shadow:0 0 8px rgba(0,0,0,0.6); left:0%; transition:left 0.8s cubic-bezier(.2,.8,.2,1); }
+  /* The track spans the full bar and slides via transform (GPU-only), so the
+     needle glide never triggers layout. translateX(%) of the track = % of bar width. */
+  .meter-track { position:absolute; inset:0; transition:transform 0.8s cubic-bezier(.2,.8,.2,1); will-change:transform; }
+  .meter-needle { position:absolute; top:-5px; left:-2px; width:4px; height:26px; background:#fff; border-radius:3px; box-shadow:0 0 8px rgba(0,0,0,0.6); }
   .teams { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:720px; margin:0 auto; }
   .team { background:var(--bg-2); border:1px solid var(--line); border-radius:14px; padding:18px 16px; text-align:center; position:relative; overflow:hidden; }
   .team::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent,var(--muted)); }
@@ -296,7 +299,7 @@
   .notify form { display:flex; gap:10px; }
   .notify input { flex:1; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:13px 16px; color:var(--ink); font-size:0.95rem; }
   .notify input:focus { outline:none; border-color:var(--knuckle); }
-  .notify button { background:var(--knuckle); color:#fff; border:none; border-radius:10px; padding:0 20px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
+  .notify button { background:var(--knuckle); color:#fff; border:none; border-radius:10px; padding:0 20px; min-height:44px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; }
   .notify button:hover { background:var(--knuckle-deep); }
   .notify .note { color:var(--muted); font-size:0.75rem; margin-top:10px; }
 
@@ -306,6 +309,15 @@
   .faq-item { border-bottom:1px solid var(--line); padding:22px 0; }
   .faq-item h3 { font-family:'Roboto Slab',serif; font-size:1.12rem; margin-bottom:8px; }
   .faq-item p { color:var(--muted); }
+
+  /* Links + keyboard focus */
+  :focus-visible { outline:2px solid var(--knuckle); outline-offset:3px; border-radius:2px; }
+  .scroll-cue { text-decoration:none; }
+  .faq-item a { color:var(--ink); text-decoration:underline; text-decoration-color:var(--knuckle); text-underline-offset:3px; }
+  .faq-item a:hover { color:var(--knuckle); }
+  .fnav { margin-top:26px; display:flex; gap:10px 22px; justify-content:center; flex-wrap:wrap; }
+  .fnav a { color:var(--muted); font-family:'Roboto Slab',serif; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; padding:6px 2px; }
+  .fnav a:hover { color:var(--knuckle); }
 
   /* FOOTER */
   footer { padding:60px 24px 70px; text-align:center; background:var(--bg); border-top:1px solid var(--line); }
@@ -319,6 +331,8 @@
     .notify form { flex-direction:column; }
     .notify button { padding:13px; }
     section { padding:64px 0; }
+    /* keep the team line on one line instead of wrapping after a separator */
+    .hero .sub { font-size:0.78rem; letter-spacing:0.12em; white-space:nowrap; }
   }
 
   /* Respect users who ask for less motion: kill smooth-scroll, the bobbing cue,
@@ -342,8 +356,10 @@
     <h1>White<br>Knuckle<br>City</h1>
     <p class="sub">Guardians &nbsp;·&nbsp; Browns &nbsp;·&nbsp; Cavaliers</p>
     <p class="origin">Born on a Cleveland broadcast, the way most Cleveland truths are — said out loud over the air one tense night, when everybody listening already had it in their hands.</p>
-    <div class="scroll-cue">Grip Tighter ↓</div>
+    <a class="scroll-cue" href="#index">Grip Tighter ↓</a>
   </header>
+
+  <main>
 
   <!-- DEFINITION -->
   <section class="def" aria-label="Definition">
@@ -371,7 +387,7 @@
         <div class="meter-label">Current Grip Level</div>
         <div class="meter-value" id="indexValue">—</div>
         <div class="meter-state" id="indexState" role="status" aria-live="polite" aria-atomic="true">Checking the scoreboard…</div>
-        <div class="meter-bar" id="meterBar" role="meter" aria-label="White Knuckle Index" aria-valuemin="0" aria-valuemax="100"><div class="meter-needle" id="needle"></div></div>
+        <div class="meter-bar" id="meterBar" role="meter" aria-label="White Knuckle Index" aria-valuemin="0" aria-valuemax="100"><div class="meter-track" id="needleTrack"><div class="meter-needle"></div></div></div>
       </div>
 
       <div class="teams">
@@ -384,7 +400,7 @@
   </section>
 
   <!-- MOMENTS -->
-  <section class="moments" aria-label="Cleveland sports history">
+  <section class="moments" id="moments" aria-label="Cleveland sports history">
     <div class="wrap">
       <div class="index-head">
         <h2 class="kicker">How We Earned The Name</h2>
@@ -473,7 +489,7 @@
       </div>
       <div class="notify">
         <form onsubmit="return notifyMe(event)">
-          <input type="email" id="notifyEmail" placeholder="Email me when it drops" required aria-label="Email address" />
+          <input type="email" id="notifyEmail" placeholder="Email me when it drops" required aria-label="Email address" autocomplete="email" />
           <button type="submit">Notify Me</button>
         </form>
         <p class="note" id="notifyNote">First crack at the drop. Nothing else.</p>
@@ -496,7 +512,7 @@
         </div>
         <div class="faq-item">
           <h3>Which teams make Cleveland a white knuckle city?</h3>
-          <p>The Cleveland Guardians (MLB), the Cleveland Browns (NFL), and the Cleveland Cavaliers (NBA).</p>
+          <p>The <a href="https://www.mlb.com/guardians" target="_blank" rel="noopener external">Cleveland Guardians</a> (MLB), the <a href="https://www.clevelandbrowns.com/" target="_blank" rel="noopener external">Cleveland Browns</a> (NFL), and the <a href="https://www.nba.com/cavaliers/" target="_blank" rel="noopener external">Cleveland Cavaliers</a> (NBA).</p>
         </div>
         <div class="faq-item">
           <h3>What is the White Knuckle Index?</h3>
@@ -505,10 +521,17 @@
       </div>
     </div>
   </section>
+  </main>
 
   <!-- FOOTER -->
   <footer>
     <div class="fk">White Knuckle City</div>
+    <nav class="fnav" aria-label="Site sections">
+      <a href="#index">The Index</a>
+      <a href="#moments">The Moments</a>
+      <a href="#merch">The Merch</a>
+      <a href="#faq">The FAQ</a>
+    </nav>
     <p class="origin-nod">The phrase wasn't invented here. It was overheard here — the way the best Cleveland truths are, crackling out of a radio on a warm night when the game got close and somebody said out loud what the whole city already felt.</p>
     <p class="fine">whiteknucklecity.com · Made in the 216 · Not affiliated with any team, league, or broadcaster. Just the feeling.</p>
   </footer>
@@ -568,7 +591,16 @@ function evaluate(ev) {
 
   if (stateName === 'pre') {
     const t = type.shortDetail || 'Scheduled';
-    return { tension:12, statusHtml:'Pregame · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'' };
+    const start = ev.date ? Date.parse(ev.date) : NaN;
+    const next = { start: isNaN(start) ? Infinity : start, opp: oppName, detail: t };
+    // Only a game starting soon builds real tension. ESPN's scoreboard shows the
+    // next scheduled game even months out (e.g. the Browns opener in July) —
+    // that's anticipation, not a clench.
+    const soon = !isNaN(start) && (start - Date.now()) < 12 * 3600 * 1000;
+    if (soon) {
+      return { tension:12, statusHtml:'Pregame · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next };
+    }
+    return { tension:null, statusHtml:'Next · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next };
   }
   if (stateName === 'post') {
     const won = cleScore > oppScore;
@@ -589,21 +621,23 @@ function computeLiveTension(cle, opp, ev, comp) {
   return Math.max(3, Math.min(100, Math.round(base)));
 }
 
-function drive(overall) {
+function drive(overall, nextUp) {
   const val = document.getElementById('indexValue');
   const state = document.getElementById('indexState');
-  const needle = document.getElementById('needle');
+  const track = document.getElementById('needleTrack');
   const bar = document.getElementById('meterBar');
   if (overall == null) {
     val.textContent = 'AT REST';
     val.style.fontSize = 'clamp(1.8rem,6vw,2.8rem)';
-    state.textContent = 'No Cleveland teams playing right now. Rare footage.';
-    needle.style.left = '6%';
+    state.textContent = nextUp
+      ? 'Next grip: ' + nextUp.team + ' vs ' + nextUp.opp + ' · ' + nextUp.detail
+      : 'No Cleveland teams playing right now. Rare footage.';
+    track.style.transform = 'translateX(6%)';
     if (bar) { bar.setAttribute('aria-valuenow', '0'); bar.setAttribute('aria-valuetext', 'At rest — no Cleveland game right now.'); }
     return;
   }
   val.textContent = overall + ' / 100';
-  needle.style.left = Math.max(2, Math.min(98, overall)) + '%';
+  track.style.transform = 'translateX(' + Math.max(2, Math.min(98, overall)) + '%)';
   let label;
   if (overall < 20) label = 'Loose grip. Cleveland can almost relax.';
   else if (overall < 45) label = 'Palms warming up. Something is brewing.';
@@ -616,12 +650,14 @@ function drive(overall) {
 
 async function loadTeam(t) {
   try {
-    const res = await fetch(t.url, { cache:'no-store' });
+    const timeout = (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(10000) : undefined;
+    const res = await fetch(t.url, { cache:'no-store', signal: timeout });
     if (!res.ok) throw new Error('bad status ' + res.status);
     const data = await res.json();
     const r = evaluate(findClevelandEvent(data));
     setTeam(t.key, r.statusHtml, r.scoreText);
-    return r.tension;
+    if (r.next) r.next.team = t.name;
+    return r;
   } catch (e) {
     setTeam(t.key, '<span style="opacity:.6">Scoreboard unavailable.</span>', '');
     return null;
@@ -630,9 +666,13 @@ async function loadTeam(t) {
 
 async function loadIndex() {
   const results = await Promise.all(TEAMS.map(loadTeam));
-  const active = results.filter(v => typeof v === 'number');
+  const active = results.filter(r => r && typeof r.tension === 'number').map(r => r.tension);
   const overall = active.length ? Math.max.apply(null, active) : null;
-  drive(overall);
+  let nextUp = null;
+  for (const r of results) {
+    if (r && r.next && isFinite(r.next.start) && (!nextUp || r.next.start < nextUp.start)) nextUp = r.next;
+  }
+  drive(overall, nextUp);
 }
 
 async function notifyMe(e) {

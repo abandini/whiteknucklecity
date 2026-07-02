@@ -49,6 +49,17 @@ printf '%s' "re_..." | npx wrangler secret put RESEND_API_KEY
 ```
 The key was shared in plaintext during setup — consider rotating it in the Resend dashboard.
 
+## Edge behavior (src/index.js — requires `run_worker_first = true` in wrangler.toml)
+Static-asset requests bypass the Worker unless `run_worker_first` is set — without it the
+redirects/headers silently stop working. The Worker adds:
+- 301 http→https and www→apex (single canonical origin; zone-level "Always Use HTTPS" not needed).
+- Security headers: HSTS, CSP (allows Google Fonts, ESPN, and the zone's auto-injected
+  Cloudflare Web Analytics beacon), nosniff, referrer-policy, permissions-policy.
+- `/assets/*` cached `max-age=86400` (filenames aren't hashed — don't go immutable).
+- `/api/notify` protections: 5 req / 10 min / IP via `caches.default` (best-effort, per-colo),
+  and duplicate signups return `{ok,duplicate:true}` WITHOUT re-sending the confirmation email
+  (Resend contact-create is idempotent-201, so duplicates are detected via GET-by-email first).
+
 ## Custom domain (DONE)
 `whiteknucklecity.com` + `www` are attached to the Worker via the `routes` block in `wrangler.toml`
 (`custom_domain = true`), so `wrangler deploy` provisions the managed DNS records + certs. The old
@@ -90,10 +101,9 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 
 ## Open TODOs
 1. Set up Printify products; replace "Coming Soon" with real buy links.
-2. Enable "Always Use HTTPS" (dashboard → SSL/TLS → Edge Certificates) so `http://` 301s to `https://`
-   — the DNS-only API token used for setup couldn't toggle zone settings. Optional; canonical already handles it.
-3. Optional: richer live-index logic (win probability, not just score margin).
-4. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
+2. Optional: richer live-index logic (win probability, not just score margin).
+3. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
+4. Optional: add "The Move" (1995, Browns→Baltimore) to the timeline — the biggest omission.
 
 ## Done (2026-07-01)
 - Migrated Pages → Worker; deleted the stale `white-knuckle-city` Pages project.
