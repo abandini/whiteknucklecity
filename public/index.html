@@ -290,6 +290,20 @@
 
   /* MERCH */
   .merch { background:linear-gradient(180deg,var(--bg-2),var(--bg)); text-align:center; }
+
+  /* REQUIRED READING */
+  .books { background: var(--bg-2); }
+  .book-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:40px auto 0; }
+  .book-card { border:1px solid var(--line); border-radius:16px; padding:22px 20px 20px; background:var(--bg); display:flex; flex-direction:column; gap:6px; }
+  .b-team { font-family:'Roboto Slab',serif; font-size:0.68rem; letter-spacing:0.28em; text-transform:uppercase; }
+  .b-team.guardians { color:var(--guardians); } .b-team.browns { color:var(--browns); } .b-team.cavs { color:#c9587a; }
+  .b-title { font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.03em; font-size:1.25rem; line-height:1.15; margin-top:6px; }
+  .b-author { color:var(--muted); font-size:0.85rem; }
+  .b-desc { color:var(--muted); font-size:0.92rem; flex:1; margin-top:6px; }
+  .b-link { display:inline-block; margin-top:12px; font-family:'Roboto Slab',serif; font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--knuckle); padding-bottom:3px; align-self:flex-start; }
+  .b-link:hover { color:var(--knuckle); }
+  .affil { color:var(--muted); font-size:0.78rem; max-width:680px; margin:26px auto 0; text-align:center; opacity:0.85; }
+  @media (max-width: 760px) { .book-grid { grid-template-columns:1fr; } }
   .merch-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; max-width:680px; margin:40px auto 0; }
   .merch-card { border:1px solid var(--line); border-radius:16px; padding:26px 22px 30px; background:var(--bg); display:flex; flex-direction:column; align-items:center; gap:12px; }
   .merch-card svg, .merch-card img { width:100%; max-width:300px; height:auto; display:block; }
@@ -467,6 +481,60 @@
   </section>
 
   <!-- MERCH -->
+  <section class="books" id="books" aria-label="Required reading">
+    <div class="wrap">
+      <div class="index-head">
+        <h2 class="kicker">Required Reading</h2>
+        <p>For the nights the game ends and the grip doesn&rsquo;t. Six books by people who lived it.</p>
+      </div>
+      <div class="book-grid">
+        <div class="book-card">
+          <div class="b-team guardians">Guardians</div>
+          <div class="b-title">The Curse of Rocky Colavito</div>
+          <div class="b-author">Terry Pluto</div>
+          <p class="b-desc">The thirty-year slump, told with love. The book that named the feeling before this site did.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1598510355?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+        <div class="book-card">
+          <div class="b-team browns">Browns</div>
+          <div class="b-title">Things I've Learned from Watching the Browns</div>
+          <div class="b-author">Terry Pluto</div>
+          <p class="b-desc">A lifetime of Sundays, in the fans&rsquo; own words. You will recognize yourself.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1598510657?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+        <div class="book-card">
+          <div class="b-team browns">Browns</div>
+          <div class="b-title">False Start</div>
+          <div class="b-author">Terry Pluto</div>
+          <p class="b-desc">How the new Browns were set up to fail. 1999, and everything that followed from it.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1938441966?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+        <div class="book-card">
+          <div class="b-team browns">Browns</div>
+          <div class="b-title">Browns Town 1964</div>
+          <div class="b-author">Terry Pluto</div>
+          <p class="b-desc">The last championship, the season the city still measures everything against.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1886228728?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+        <div class="book-card">
+          <div class="b-team cavs">Cavs</div>
+          <div class="b-title">The Comeback</div>
+          <div class="b-author">Terry Pluto</div>
+          <p class="b-desc">LeBron comes home, 3&ndash;1 comes back, and 52 years end on a Sunday night in Oakland.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1938441885?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+        <div class="book-card">
+          <div class="b-team cavs">Cavs</div>
+          <div class="b-title">Return of the King</div>
+          <div class="b-author">Brian Windhorst &amp; Dave McMenamin</div>
+          <p class="b-desc">The same comeback from the beat writers&rsquo; seats: planes, huddles, and the locker room.</p>
+          <a class="b-link" href="https://www.amazon.com/dp/1478971681?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
+        </div>
+      </div>
+      <p class="affil">Amazon links carry our affiliate tag. As an Amazon Associate, White Knuckle City earns from qualifying purchases, at no cost to you. The books are here because they are the ones worth reading, not because of the commission.</p>
+    </div>
+  </section>
+
   <section class="merch" id="merch" aria-label="Merch">
     <div class="wrap">
       <div class="index-head">
@@ -536,11 +604,12 @@
     <nav class="fnav" aria-label="Site sections">
       <a href="#index">The Index</a>
       <a href="#moments">The Moments</a>
+        <a href="#books">The Books</a>
       <a href="#merch">The Merch</a>
       <a href="#faq">The FAQ</a>
     </nav>
     <p class="origin-nod">The phrase wasn't invented here. It was overheard here — the way the best Cleveland truths are, crackling out of a radio on a warm night when the game got close and somebody said out loud what the whole city already felt.</p>
-    <p class="fine">whiteknucklecity.com · Made in the 216 · Not affiliated with any team, league, or broadcaster. Just the feeling.</p>
+    <p class="fine">whiteknucklecity.com · Made in the 216 · Not affiliated with any team, league, or broadcaster. Just the feeling. Amazon links are affiliate links.</p>
   </footer>
 
 <script>
