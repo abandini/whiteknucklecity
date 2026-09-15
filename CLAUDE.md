@@ -32,6 +32,10 @@ A one-page statement site + live sports-tension tracker for Cleveland, Ohio spor
     - `wordmark-print-dark.png` — print-ready wordmark, cream ink (for DARK garments). 3000x3000, transparent.
     - `wordmark-print-light.png` — print-ready wordmark, dark ink (for LIGHT garments). 3000x3000, transparent.
     - `wordmark-print.svg` — vector source of the wordmark (DejaVu Sans Condensed stand-in; swap to Anton for brand-exact type).
+    - `merch-cap.webp` / `merch-tee.webp` — AI product-render mockups for the merch cards.
+    - `share/` — 6 banded 1200x630 share-card images (`rest`, `band-1`…`band-5`) used as the
+      live OG image per tension band. Regenerate with:
+      `node scripts/gen-share.js /tmp/wkc-svg && for f in /tmp/wkc-svg/*.svg; do rsvg-convert -w 1200 -h 630 "$f" -o public/assets/share/$(basename "$f" .svg).png; done`
 - `src/index.js` — Worker fetch handler.
 - `wrangler.toml` — Worker config.
 
@@ -59,6 +63,18 @@ redirects/headers silently stop working. The Worker adds:
 - `/api/notify` protections: 5 req / 10 min / IP via `caches.default` (best-effort, per-colo),
   and duplicate signups return `{ok,duplicate:true}` WITHOUT re-sending the confirmation email
   (Resend contact-create is idempotent-201, so duplicates are detected via GET-by-email first).
+- `GET /api/index`: server-computed White Knuckle Index as JSON (CORS-open, `max-age=45`).
+  Mirrors the client meter's tension math. Powers the live share cards and a future badge.
+- **Live share cards**: on the homepage (`/` and `/index.html`), the Worker rewrites the
+  OG/Twitter meta tags (title/description/image) with the current Index via `HTMLRewriter`,
+  so sharing `whiteknucklecity.com` shows a live "Index: 92 — Full clench" card. The index is
+  edge-cached ~45s; if ESPN is unreachable (`known:false`) the static default tags are left
+  in place rather than falsely claiming "at rest".
+- **ESPN gotcha (server-side only):** ESPN's Akamai WAF **403s** workerd's default User-Agent
+  AND spoofed browser UAs (a Mozilla UA without a matching browser TLS fingerprint reads as a
+  bot). The server fetch therefore sends an honest client UA (`curl/8.7.1`), which returns 200.
+  The client meter is unaffected — it reads ESPN from the visitor's real browser. If `/api/index`
+  starts returning `known:false`, check whether ESPN changed its UA allowlist first.
 
 ## Custom domain (DONE)
 `whiteknucklecity.com` + `www` are attached to the Worker via the `routes` block in `wrangler.toml`
@@ -78,6 +94,17 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   `prefers-reduced-motion`.
 - These endpoints are CORS-open and run from the visitor's browser. They can change without notice — if the
   meter breaks, verify the ESPN response shape first.
+- The SAME math also runs server-side in `src/index.js` (`computeIndex`/`tensionFor`/`band`) to power
+  `/api/index` and the live share cards. Keep the two implementations in sync when tweaking the formula.
+
+## Share / virality (live share cards)
+- The Index's unfair advantage: it's a live, game-specific reaction people share DURING games.
+- "Share the pain" button (`.share-row` in the Index section): native share sheet on mobile
+  (`navigator.share`), X/Bluesky/Threads/copy fallback menu on desktop. Shares the homepage URL
+  (with `?utm_source=share&utm_medium=<net>`), so the crawler-fetched OG card shows the live grip level.
+- Card images are banded (see `assets/share/`); the exact number lives in the OG **title** text
+  (rendered everywhere). To burn the exact number into the image would need runtime PNG rendering
+  (satori + resvg-wasm) — deliberately deferred.
 
 ## SEO / AEO
 - Full meta + canonical + hreflang, Open Graph (with image alt/type), Twitter cards, theme-color, geo tags.
@@ -94,18 +121,34 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   from `noreply@whiteknucklecity.com` (domain verified in Resend). The front-end only shows success when the
   server confirms. To broadcast when merch drops, use a Resend Broadcast to that audience.
 
+## Monetization
+- **Amazon Associates (LIVE):** the "Required Reading" section (`#books`) links 6 Cleveland
+  sports books with the site's Associates tag **`whiteknucklecity-20`**. FTC disclosure sits ABOVE
+  the grid and leads with Amazon's exact required sentence; links use `rel="sponsored noopener"`.
+  ⚠️ Confirm `whiteknucklecity-20` is a registered/approved tracking ID or the links won't earn.
+- **Merch (planned):** print-on-demand via Printify — see below.
+
 ## Merch products (REMAINING)
 - Plan: print-on-demand via Printify. Upload `wordmark-print-dark.png` (dark garments) /
   `wordmark-print-light.png` (light garments) as the design; Printify generates real product photos.
-- Site shows SVG cap + tee mockups with "Coming Soon" badges. Wire real Printify product URLs into the buy buttons.
+- Site shows cap + tee AI-render mockups with "Coming Soon" badges. Wire real Printify product URLs
+  into the buy buttons. Suggested pre-store step: a cap-vs-tee vote/waitlist (needs a KV namespace)
+  to gauge demand before committing to a product.
 
 ## Open TODOs
-1. Set up Printify products; replace "Coming Soon" with real buy links.
-2. Optional: richer live-index logic (win probability, not just score margin).
-3. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
-4. Optional: add "The Move" (1995, Browns→Baltimore) to the timeline — the biggest omission.
+1. **Knuckle Alerts** — auto-email the Resend audience when the Index crosses a threshold (e.g. 85).
+   Needs a Cron Trigger + a "last alerted" guard so it fires once per game, not every tick.
+2. Cap-vs-tee vote/waitlist replacing "Coming Soon" (KV), then set up Printify products + buy links.
+3. Embeddable "current grip level" badge for other Cleveland sites (an iframe/script over `/api/index`).
+4. Optional: richer live-index logic (win probability, not just score margin).
+5. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
 
 ## Done (2026-07-01)
 - Migrated Pages → Worker; deleted the stale `white-knuckle-city` Pages project.
 - Wired merch signup to Resend (audience + confirmation email).
 - Attached custom domain (apex + www); repointed all URLs; SEO/AEO enrichment.
+
+## Done (2026-09-15)
+- Added the "Required Reading" Amazon-affiliate section (tag `whiteknucklecity-20`, FTC-compliant).
+- Built the share engine: server-side index (`/api/index`), live OG share cards via HTMLRewriter,
+  6 banded share images, and the "Share the pain" button. Found/fixed the ESPN server-fetch 403.
