@@ -275,6 +275,17 @@
   @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
   .disclaimer { text-align:center; color:var(--muted); font-size:0.75rem; margin-top:26px; }
 
+  /* SHARE */
+  .share-row { position:relative; display:flex; justify-content:center; margin:22px auto 0; }
+  .share-btn { display:inline-flex; align-items:center; gap:9px; background:transparent; color:var(--ink); border:1px solid var(--knuckle); border-radius:999px; padding:11px 22px; min-height:44px; font-family:'Roboto Slab',serif; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer; transition:background 0.15s, color 0.15s; }
+  .share-btn:hover { background:var(--knuckle); color:#fff; }
+  .share-btn svg { width:16px; height:16px; }
+  .share-menu { position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%); z-index:20; background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:6px; min-width:200px; box-shadow:0 12px 40px rgba(0,0,0,0.5); display:flex; flex-direction:column; }
+  .share-menu[hidden] { display:none; }
+  .share-menu a, .share-menu button { display:block; width:100%; text-align:left; background:transparent; border:none; color:var(--ink); font-family:'Inter',sans-serif; font-size:0.9rem; padding:11px 14px; border-radius:8px; cursor:pointer; text-decoration:none; }
+  .share-menu a:hover, .share-menu button:hover { background:rgba(255,255,255,0.06); color:var(--knuckle); }
+  .share-hint { text-align:center; color:var(--muted); font-size:0.72rem; margin-top:10px; min-height:1.2em; }
+
   /* MOMENTS */
   .moments { background:var(--bg); }
   .timeline { max-width:760px; margin:40px auto 0; position:relative; }
@@ -403,6 +414,20 @@
         <div class="meter-value" id="indexValue">—</div>
         <div class="meter-state" id="indexState" role="status" aria-live="polite" aria-atomic="true">Checking the scoreboard…</div>
         <div class="meter-bar" id="meterBar" role="meter" aria-label="White Knuckle Index" aria-valuemin="0" aria-valuemax="100"><div class="meter-track" id="needleTrack"><div class="meter-needle"></div></div></div>
+
+        <div class="share-row">
+          <button type="button" class="share-btn" id="shareBtn" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            Share the pain
+          </button>
+          <div class="share-menu" id="shareMenu" role="menu" hidden>
+            <a role="menuitem" data-net="x" href="#" target="_blank" rel="noopener">Post to X</a>
+            <a role="menuitem" data-net="bsky" href="#" target="_blank" rel="noopener">Post to Bluesky</a>
+            <a role="menuitem" data-net="threads" href="#" target="_blank" rel="noopener">Post to Threads</a>
+            <button role="menuitem" type="button" data-net="copy">Copy the link</button>
+          </div>
+        </div>
+        <p class="share-hint" id="shareHint" role="status" aria-live="polite"></p>
       </div>
 
       <div class="teams">
@@ -480,13 +505,14 @@
     </div>
   </section>
 
-  <!-- MERCH -->
+  <!-- REQUIRED READING -->
   <section class="books" id="books" aria-label="Required reading">
     <div class="wrap">
       <div class="index-head">
         <h2 class="kicker">Required Reading</h2>
         <p>For the nights the game ends and the grip doesn&rsquo;t. Six books by people who lived it.</p>
       </div>
+      <p class="affil"><strong>As an Amazon Associate, White Knuckle City earns from qualifying purchases</strong> — at no extra cost to you. The books are here because they&rsquo;re the ones worth reading, not because of the commission.</p>
       <div class="book-grid">
         <div class="book-card">
           <div class="b-team guardians">Guardians</div>
@@ -531,10 +557,10 @@
           <a class="b-link" href="https://www.amazon.com/dp/1478971681?tag=frozeniguanas-20" target="_blank" rel="sponsored noopener">Find it on Amazon &rarr;</a>
         </div>
       </div>
-      <p class="affil">Amazon links carry our affiliate tag. As an Amazon Associate, White Knuckle City earns from qualifying purchases, at no cost to you. The books are here because they are the ones worth reading, not because of the commission.</p>
     </div>
   </section>
 
+  <!-- MERCH -->
   <section class="merch" id="merch" aria-label="Merch">
     <div class="wrap">
       <div class="index-head">
@@ -604,7 +630,7 @@
     <nav class="fnav" aria-label="Site sections">
       <a href="#index">The Index</a>
       <a href="#moments">The Moments</a>
-        <a href="#books">The Books</a>
+      <a href="#books">The Books</a>
       <a href="#merch">The Merch</a>
       <a href="#faq">The FAQ</a>
     </nav>
@@ -697,7 +723,10 @@ function computeLiveTension(cle, opp, ev, comp) {
   return Math.max(3, Math.min(100, Math.round(base)));
 }
 
+let latestOverall = null; // most recent index value (null = no game), for sharing
+
 function drive(overall, nextUp) {
+  latestOverall = overall;
   const val = document.getElementById('indexValue');
   const state = document.getElementById('indexState');
   const track = document.getElementById('needleTrack');
@@ -783,6 +812,87 @@ async function notifyMe(e) {
   return false;
 }
 
+/* ---- Share the pain ---------------------------------------------------------
+   Builds a message from the current grip level and hands it to the native share
+   sheet (mobile) or a small menu of intents (desktop). The shared URL is the
+   homepage itself — the Worker rewrites its social tags with the live index, so
+   the preview card shows the current grip level. */
+
+function shareParts() {
+  const v = latestOverall;
+  let word;
+  if (v == null) word = 'At rest';
+  else if (v < 20) word = 'Loose grip';
+  else if (v < 45) word = 'Palms warming';
+  else if (v < 70) word = 'Knuckles paling';
+  else if (v < 88) word = 'Full clench';
+  else word = 'Maximum grip';
+  const text = (v == null)
+    ? "Cleveland's at rest — rare footage. Watch the White Knuckle Index climb the second the next game starts:"
+    : `White Knuckle Index: ${v}/100 — ${word}. This is what rooting for Cleveland does to a person:`;
+  const url = location.origin + '/?utm_source=share&utm_medium=social';
+  return { text, url, title: 'White Knuckle City' };
+}
+
+function flashHint(msg) {
+  const h = document.getElementById('shareHint');
+  if (!h) return;
+  h.textContent = msg;
+  clearTimeout(flashHint._t);
+  flashHint._t = setTimeout(() => { h.textContent = ''; }, 3000);
+}
+
+function openMenu(open) {
+  const btn = document.getElementById('shareBtn');
+  const menu = document.getElementById('shareMenu');
+  if (!btn || !menu) return;
+  menu.hidden = !open;
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+function initShare() {
+  const btn = document.getElementById('shareBtn');
+  const menu = document.getElementById('shareMenu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const p = shareParts();
+    // Native share sheet where available (phones) — the best experience.
+    if (navigator.share) {
+      try { await navigator.share({ title: p.title, text: p.text, url: p.url }); }
+      catch (_) { /* user cancelled — no-op */ }
+      return;
+    }
+    openMenu(menu.hidden); // toggle the desktop menu
+  });
+
+  menu.addEventListener('click', async (e) => {
+    const el = e.target.closest('[data-net]');
+    if (!el) return;
+    const net = el.getAttribute('data-net');
+    const p = shareParts();
+    if (net === 'copy') {
+      e.preventDefault();
+      try { await navigator.clipboard.writeText(p.text + ' ' + p.url); flashHint('Link copied. Go ruin someone else’s afternoon.'); }
+      catch (_) { flashHint('Copy failed — long-press the link instead.'); }
+      openMenu(false);
+      return;
+    }
+    let href;
+    if (net === 'x') href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(p.text) + '&url=' + encodeURIComponent(p.url);
+    else if (net === 'bsky') href = 'https://bsky.app/intent/compose?text=' + encodeURIComponent(p.text + ' ' + p.url);
+    else if (net === 'threads') href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(p.text + ' ' + p.url);
+    if (href) el.setAttribute('href', href); // let the anchor open it in a new tab
+    openMenu(false);
+  });
+
+  // Dismiss the menu on outside click or Escape.
+  document.addEventListener('click', () => openMenu(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') openMenu(false); });
+}
+
+initShare();
 loadIndex();
 setInterval(loadIndex, 60000);
 </script>
