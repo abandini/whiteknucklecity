@@ -106,6 +106,29 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   (rendered everywhere). To burn the exact number into the image would need runtime PNG rendering
   (satori + resvg-wasm) — deliberately deferred.
 
+## Knuckle Alerts (cron → email)
+- `wrangler.toml` `[triggers] crons = ["*/5 * * * *"]`; `scheduled()` → `runKnuckleAlerts(env)`.
+- Fires once per LIVE Cleveland game that crosses `ALERT_THRESHOLD` (85). Sends a Resend
+  **Broadcast** to the audience (create + send; Broadcasts handle unsubscribe/suppression).
+- Dedup/idempotency via KV `alert:<league>:<gameId>`: claim a 15-min `lock` BEFORE sending
+  (so an overlapping cron can't double-email), upgrade to a 24h `sent` guard on success; a
+  failed send lets the lock expire so a later run retries. Only `state==='in'` games qualify.
+- Needs `RESEND_API_KEY` (secret) + the `WKC` KV binding; without either it no-ops safely.
+- Can't be fully e2e-tested without a live 85+ game. To dry-run the path: `wrangler dev
+  --test-scheduled` then `curl localhost:PORT/__scheduled` (no key locally = clean no-op).
+
+## Cap-vs-tee vote
+- `GET/POST /api/vote` (KV counters `vote:cap` / `vote:tee`). Tallies are **entertainment-only**
+  (KV read-modify-write isn't atomic — fine for a demand signal, not a certified count).
+  POST validates `choice ∈ {cap,tee}`, own rate-limit bucket; front-end soft-locks re-votes via
+  `localStorage`. Replaces the merch "Coming Soon" badges; a live split bar shows the result.
+
+## Embeddable badge
+- `GET /badge.svg` — dynamic on-brand SVG of the current grip level (reuses the cached index).
+  `image/svg+xml`, `max-age=60`, `nosniff`, CORS-open. SVG works in `<img>` (unlike OG cards),
+  so other Cleveland sites embed `<a href=site><img src=/badge.svg></a>`. The homepage shows a
+  copy-paste snippet under the Index. All dynamic SVG text is escaped (`svgEsc`).
+
 ## SEO / AEO
 - Full meta + canonical + hreflang, Open Graph (with image alt/type), Twitter cards, theme-color, geo tags.
 - Rich JSON-LD `@graph`: WebSite + Organization + WebPage (with `speakable`) + ImageObject +
@@ -131,17 +154,19 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 ## Merch products (REMAINING)
 - Plan: print-on-demand via Printify. Upload `wordmark-print-dark.png` (dark garments) /
   `wordmark-print-light.png` (light garments) as the design; Printify generates real product photos.
-- Site shows cap + tee AI-render mockups with "Coming Soon" badges. Wire real Printify product URLs
-  into the buy buttons. Suggested pre-store step: a cap-vs-tee vote/waitlist (needs a KV namespace)
-  to gauge demand before committing to a product.
+- Site shows cap + tee AI-render mockups. The "Coming Soon" badges are now **cap-vs-tee vote
+  buttons** (see the Cap-vs-tee vote section) gauging demand. Once a winner is clear, set up the
+  Printify product and swap the vote button for a real buy link.
 
 ## Open TODOs
-1. **Knuckle Alerts** — auto-email the Resend audience when the Index crosses a threshold (e.g. 85).
-   Needs a Cron Trigger + a "last alerted" guard so it fires once per game, not every tick.
-2. Cap-vs-tee vote/waitlist replacing "Coming Soon" (KV), then set up Printify products + buy links.
-3. Embeddable "current grip level" badge for other Cleveland sites (an iframe/script over `/api/index`).
-4. Optional: richer live-index logic (win probability, not just score margin).
-5. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
+1. **Set up Printify products** now that the cap-vs-tee vote is collecting demand; wire real buy
+   links in place of the vote buttons once a winner is clear.
+2. **Distribution** (owner task): stand up WKC accounts on X + Bluesky so shares/alerts have a home;
+   pitch the `/badge.svg` embed to Cleveland blogs/newsletters/bars.
+3. Verify `whiteknucklecity-20` is a registered/approved Amazon Associates tag (else links won't earn).
+4. Optional: burn the exact Index number into the share image (runtime PNG via satori + resvg-wasm).
+5. Optional: richer live-index logic (win probability, not just score margin).
+6. Optional: rotate the Resend API key and the CF DNS token (both shared in plaintext during setup).
 
 ## Done (2026-07-01)
 - Migrated Pages → Worker; deleted the stale `white-knuckle-city` Pages project.
@@ -152,3 +177,8 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 - Added the "Required Reading" Amazon-affiliate section (tag `whiteknucklecity-20`, FTC-compliant).
 - Built the share engine: server-side index (`/api/index`), live OG share cards via HTMLRewriter,
   6 banded share images, and the "Share the pain" button. Found/fixed the ESPN server-fetch 403.
+
+## Done (2026-09-18)
+- Shipped Knuckle Alerts (cron `*/5`, per-game dedup, claim-first send), the cap-vs-tee vote
+  (`/api/vote` + KV), and the embeddable `/badge.svg`. Added the `WKC` KV namespace + cron trigger,
+  reframed the signup/confirmation for consent, and split the rate-limit buckets.
