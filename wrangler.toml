@@ -21,3 +21,13 @@ run_worker_first = true
 
 # RESEND_API_KEY is set as a secret (never committed):
 #   npx wrangler secret put RESEND_API_KEY
+
+# KV: alert dedup guards (alert:<league>:<gameId>) + cap/tee vote counters.
+[[kv_namespaces]]
+binding = "WKC"
+id = "6c350522fc024620bb00ae2a4d19aa8b"
+
+# Knuckle Alerts: the scheduled() handler checks the index every 5 minutes and,
+# when a live Cleveland game crosses the alert threshold, emails the audience once.
+[triggers]
+crons = ["*/5 * * * *"]

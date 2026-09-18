@@ -285,6 +285,33 @@
   .share-menu a, .share-menu button { display:block; width:100%; text-align:left; background:transparent; border:none; color:var(--ink); font-family:'Inter',sans-serif; font-size:0.9rem; padding:11px 14px; border-radius:8px; cursor:pointer; text-decoration:none; }
   .share-menu a:hover, .share-menu button:hover { background:rgba(255,255,255,0.06); color:var(--knuckle); }
   .share-hint { text-align:center; color:var(--muted); font-size:0.72rem; margin-top:10px; min-height:1.2em; }
+  .alert-cta { text-align:center; color:var(--muted); font-size:0.9rem; margin-top:8px; }
+  .alert-cta a { color:var(--ink); text-decoration:underline; text-decoration-color:var(--knuckle); text-underline-offset:3px; }
+  .alert-cta a:hover { color:var(--knuckle); }
+
+  /* EMBED BADGE */
+  .embed { max-width:620px; margin:40px auto 0; text-align:center; }
+  .embed h3 { font-family:'Roboto Slab',serif; font-size:0.95rem; letter-spacing:0.02em; margin-bottom:6px; }
+  .embed p { color:var(--muted); font-size:0.85rem; margin-bottom:16px; }
+  .embed .badge-preview { margin:0 auto 16px; max-width:340px; }
+  .embed .badge-preview img { width:100%; height:auto; }
+  .embed .snippet { position:relative; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:14px 16px; text-align:left; }
+  .embed code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:0.74rem; color:var(--ink); white-space:pre-wrap; word-break:break-all; display:block; }
+  .embed .copy-embed { margin-top:12px; background:transparent; color:var(--ink); border:1px solid var(--knuckle); border-radius:999px; padding:9px 18px; min-height:40px; font-family:'Roboto Slab',serif; font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; cursor:pointer; }
+  .embed .copy-embed:hover { background:var(--knuckle); color:#fff; }
+
+  /* MERCH VOTE */
+  .vote-btn { display:inline-block; margin-top:4px; background:var(--knuckle); color:#fff; border:none; border-radius:999px; padding:10px 20px; min-height:44px; font-family:'Roboto Slab',serif; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer; transition:background 0.15s; }
+  .vote-btn:hover { background:var(--knuckle-deep); }
+  .vote-btn:disabled { background:var(--bg-2); color:var(--muted); border:1px solid var(--line); cursor:default; }
+  .vote-tally { max-width:520px; margin:26px auto 0; }
+  .vote-tally .vt-head { display:flex; justify-content:space-between; font-family:'Roboto Slab',serif; font-size:0.8rem; letter-spacing:0.06em; color:var(--muted); margin-bottom:8px; }
+  .vote-tally .vt-head b { color:var(--ink); }
+  .vote-bar { display:flex; height:14px; border-radius:8px; overflow:hidden; background:var(--bg-2); border:1px solid var(--line); }
+  .vote-bar .vb-cap { background:var(--navy); }
+  .vote-bar .vb-tee { background:var(--knuckle); }
+  .vote-bar span { display:block; height:100%; transition:width 0.6s cubic-bezier(.2,.8,.2,1); }
+  .vote-note { text-align:center; color:var(--muted); font-size:0.72rem; margin-top:10px; }
 
   /* MOMENTS */
   .moments { background:var(--bg); }
@@ -430,12 +457,22 @@
         <p class="share-hint" id="shareHint" role="status" aria-live="polite"></p>
       </div>
 
+      <p class="alert-cta">Don't want to watch the whole thing? Get a <a href="#signup">Knuckle Alert</a> when the Index crosses 85.</p>
+
       <div class="teams">
         <div class="team guardians"><div class="name">Guardians</div><div class="status" id="st-guardians">Loading…</div><div class="score" id="sc-guardians"></div></div>
         <div class="team browns"><div class="name">Browns</div><div class="status" id="st-browns">Loading…</div><div class="score" id="sc-browns"></div></div>
         <div class="team cavs"><div class="name">Cavaliers</div><div class="status" id="st-cavs">Loading…</div><div class="score" id="sc-cavs"></div></div>
       </div>
       <p class="disclaimer">Live data via public ESPN scoreboards. No game today means Cleveland is only bracing, not clenching.</p>
+
+      <div class="embed">
+        <h3>Run a Cleveland site? Put the Index on it.</h3>
+        <p>A live badge that updates itself. Free — it just links back here.</p>
+        <div class="badge-preview"><img src="/badge.svg" width="340" height="96" loading="lazy" alt="Live White Knuckle Index badge" /></div>
+        <div class="snippet"><code id="embedCode">&lt;a href="https://whiteknucklecity.com"&gt;&lt;img src="https://whiteknucklecity.com/badge.svg" alt="White Knuckle Index" width="340" height="96"&gt;&lt;/a&gt;</code></div>
+        <button type="button" class="copy-embed" id="copyEmbed">Copy embed code</button>
+      </div>
     </div>
   </section>
 
@@ -565,7 +602,7 @@
     <div class="wrap">
       <div class="index-head">
         <h2 class="kicker">Wear The Clench</h2>
-        <p>Put it on your head. Put it on your chest. The right people won't need it explained.</p>
+        <p>Not made yet — and which one drops first is up to you. Put it on your head or your chest; the right people won't need it explained.</p>
       </div>
       <div class="merch-grid">
 
@@ -575,7 +612,7 @@
                alt="Navy structured baseball cap embroidered with the White Knuckle City wordmark — WHITE KNUCKLE in cream, CITY in red." />
           <div class="m-name">The Cap</div>
           <div class="m-sub">Structured navy. For gripping the brim in the ninth.</div>
-          <span class="soon">Coming Soon</span>
+          <button type="button" class="vote-btn" data-choice="cap">I'd rock the cap</button>
         </div>
 
         <!-- TEE MOCKUP -->
@@ -584,16 +621,23 @@
                alt="Heather charcoal t-shirt with a stacked chest print — WHITE KNUCKLE in cream and CITY in red." />
           <div class="m-name">The Tee</div>
           <div class="m-sub">Vintage charcoal. Soft enough to sweat through by the stretch.</div>
-          <span class="soon">Coming Soon</span>
+          <button type="button" class="vote-btn" data-choice="tee">I'd wear the tee</button>
         </div>
 
       </div>
-      <div class="notify">
+
+      <div class="vote-tally" id="voteTally" hidden>
+        <div class="vt-head"><span>The Cap <b id="vtCapPct">—</b></span><span><b id="vtTeePct">—</b> The Tee</span></div>
+        <div class="vote-bar"><span class="vb-cap" id="vbCap" style="width:50%"></span><span class="vb-tee" id="vbTee" style="width:50%"></span></div>
+        <p class="vote-note" id="voteNote"></p>
+      </div>
+
+      <div class="notify" id="signup">
         <form onsubmit="return notifyMe(event)">
-          <input type="email" id="notifyEmail" placeholder="Email me when it drops" required aria-label="Email address" autocomplete="email" />
-          <button type="submit">Notify Me</button>
+          <input type="email" id="notifyEmail" placeholder="Your email — Knuckle Alerts + the drop" required aria-label="Email address" autocomplete="email" />
+          <button type="submit">Get Alerts</button>
         </form>
-        <p class="note" id="notifyNote">First crack at the drop. Nothing else.</p>
+        <p class="note" id="notifyNote">A Knuckle Alert when a game hits 85, plus first crack at the merch. One-click unsubscribe, always.</p>
       </div>
     </div>
   </section>
@@ -892,7 +936,77 @@ function initShare() {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') openMenu(false); });
 }
 
+/* ---- Cap-vs-tee vote --------------------------------------------------------
+   Demand signal before we build anything. Tallies are entertainment-only. */
+
+async function fetchVotes() {
+  try {
+    const r = await fetch('/api/vote', { cache: 'no-store' });
+    const d = await r.json();
+    if (d && d.ok) return d;
+  } catch (_) {}
+  return null;
+}
+
+function renderVotes(d, force) {
+  const tally = document.getElementById('voteTally');
+  if (!tally || !d) return;
+  const total = (d.cap || 0) + (d.tee || 0);
+  if (total === 0 && !force) return; // nothing to show until someone votes
+  const capPct = total ? Math.round((d.cap * 100) / total) : 50;
+  const teePct = 100 - capPct;
+  document.getElementById('vtCapPct').textContent = capPct + '%';
+  document.getElementById('vtTeePct').textContent = teePct + '%';
+  document.getElementById('vbCap').style.width = capPct + '%';
+  document.getElementById('vbTee').style.width = teePct + '%';
+  document.getElementById('voteNote').textContent = total + (total === 1 ? ' vote so far.' : ' votes so far.');
+  tally.hidden = false;
+}
+
+function initVote() {
+  const btns = [...document.querySelectorAll('.vote-btn')];
+  if (!btns.length) return;
+  const label = (c) => (c === 'cap' ? 'Cap — noted' : 'Tee — noted');
+  let voted = null;
+  try { voted = localStorage.getItem('wkc_vote'); } catch (_) {}
+
+  btns.forEach((b) => {
+    const choice = b.getAttribute('data-choice');
+    if (voted) { b.disabled = true; if (choice === voted) b.textContent = label(choice); }
+    b.addEventListener('click', async () => {
+      btns.forEach((x) => { x.disabled = true; });
+      b.textContent = label(choice);
+      try { localStorage.setItem('wkc_vote', choice); } catch (_) {}
+      try {
+        const r = await fetch('/api/vote', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ choice }),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) renderVotes(d, true);
+      } catch (_) {}
+    });
+  });
+
+  fetchVotes().then((d) => renderVotes(d, !!voted));
+}
+
+function initEmbed() {
+  const btn = document.getElementById('copyEmbed');
+  const code = document.getElementById('embedCode');
+  if (!btn || !code) return;
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy embed code'; }, 2000);
+    } catch (_) { btn.textContent = 'Select the code above to copy'; }
+  });
+}
+
 initShare();
+initVote();
+initEmbed();
 loadIndex();
 setInterval(loadIndex, 60000);
 </script>
