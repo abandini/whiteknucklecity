@@ -35,12 +35,14 @@ const RATE_LIMIT_WINDOW = 600;   // seconds
 // and unaffected by script-src.
 const CSP = [
   "default-src 'none'",
-  // cloudflareinsights = the zone's auto-injected Web Analytics beacon
-  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+  // cloudflareinsights = the zone's auto-injected Web Analytics beacon;
+  // us-assets.i.posthog.com serves the PostHog SDK (array.js + lazy chunks).
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://us-assets.i.posthog.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src https://fonts.gstatic.com",
-  "img-src 'self'",
-  "connect-src 'self' https://site.api.espn.com https://cloudflareinsights.com",
+  "img-src 'self' https://us.i.posthog.com",
+  // PostHog posts events to us.i.posthog.com and pulls config from us-assets.
+  "connect-src 'self' https://site.api.espn.com https://cloudflareinsights.com https://us.i.posthog.com https://us-assets.i.posthog.com",
   "manifest-src 'self'",
   "base-uri 'none'",
   "form-action 'self'",
