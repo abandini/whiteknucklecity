@@ -182,3 +182,14 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 - Shipped Knuckle Alerts (cron `*/5`, per-game dedup, claim-first send), the cap-vs-tee vote
   (`/api/vote` + KV), and the embeddable `/badge.svg`. Added the `WKC` KV namespace + cron trigger,
   reframed the signup/confirmation for consent, and split the rate-limit buckets.
+
+## Done (2026-09-26)
+- Added PostHog (public US-cloud key `phc_yMcK…`, same project as the other sites; privacy-tuned,
+  localhost-skipped) so real human traffic is measurable — the `site-stats` HUMANS section reads
+  PostHog and filters by `$host`. Opened the CSP for PostHog (script/connect/img). Verified live.
+
+## Analytics
+- **Cloudflare Web Analytics** (auto-injected zone beacon, `cloudflareinsights`) + **PostHog**
+  (snippet at the bottom of `public/index.html`). For human numbers: `python3
+  ~/.claude/skills/site-stats/scripts/site_stats.py --domain whiteknucklecity.com` (PostHog HUMANS
+  can lag ~1h). Cloudflare "uniques" are mostly bots/crawlers — not the audience.
