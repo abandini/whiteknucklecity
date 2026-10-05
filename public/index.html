@@ -1082,6 +1082,18 @@ setInterval(loadIndex, 60000);
 setInterval(loadOctober, 300000);
 </script>
 
+<!-- Analytics: Google Analytics 4 (gtag). Config only fires off-localhost so dev
+     traffic stays out of the numbers. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GB270XLSN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    gtag('config', 'G-8GB270XLSN');
+  }
+</script>
+
 <!-- Analytics: PostHog (privacy-tuned — DNT respected, no session recording,
      identified_only profiles). Public project key, meant to ship to browsers.
      Skipped on localhost so dev traffic never pollutes the numbers. -->
