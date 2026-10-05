@@ -60,9 +60,9 @@ const json = (obj, status = 200, extra = {}) =>
 // the meter. Reads the three Cleveland teams from public ESPN scoreboards.
 
 const SPORTS = [
-  { key: 'guardians', name: 'Guardians', league: 'mlb', url: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard' },
-  { key: 'browns',    name: 'Browns',    league: 'nfl', url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard' },
-  { key: 'cavs',      name: 'Cavaliers', league: 'nba', url: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard' },
+  { key: 'guardians', name: 'Guardians', league: 'mlb', core: 'baseball/leagues/mlb',   url: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard' },
+  { key: 'browns',    name: 'Browns',    league: 'nfl', core: 'football/leagues/nfl',   url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard' },
+  { key: 'cavs',      name: 'Cavaliers', league: 'nba', core: 'basketball/leagues/nba', url: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard' },
 ];
 
 const isCle = (c) =>
@@ -342,6 +342,109 @@ async function handleNotify(request, env) {
   return json({ ok: true });
 }
 
+const ESPN_UA = { 'user-agent': 'curl/8.7.1' };
+
+// Find the most relevant Cleveland game across the three leagues: prefer a live
+// game, then an upcoming one, then the most recent final. Returns the sport +
+// ESPN event, or null. (Odds/series aren't in the client's CORS feed, so this
+// runs server-side.)
+async function findClevelandGame() {
+  let best = null; // {sport, ev, rank, start}
+  const rank = (s) => (s === 'in' ? 3 : s === 'pre' ? 2 : 1);
+  await Promise.all(SPORTS.map(async (s) => {
+    try {
+      const res = await fetch(s.url, { headers: ESPN_UA, cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(4000) });
+      if (!res.ok) return;
+      const ev = findClevelandEvent(await res.json());
+      if (!ev) return;
+      const state = (((ev.status || {}).type) || {}).state || 'post';
+      const start = ev.date ? Date.parse(ev.date) : 0;
+      const cand = { sport: s, ev, rank: rank(state), start };
+      if (!best || cand.rank > best.rank || (cand.rank === best.rank && cand.start > best.start)) best = cand;
+    } catch (_) { /* skip this league */ }
+  }));
+  return best;
+}
+
+// GET /api/odds — series status + betting line for the next/current Cleveland
+// playoff (or regular) game. Odds come from ESPN's core API (DraftKings line).
+// Cached ~5 min. Returns { ok, game: {...} | null }. Entertainment only.
+async function handleOdds() {
+  const cache = caches.default;
+  const cacheKey = new Request('https://odds.wkc.internal/odds.json');
+  const hit = await cache.match(cacheKey);
+  if (hit) { try { return new Response(hit.body, hit); } catch (_) {} }
+
+  let payload = { ok: true, game: null };
+  const found = await findClevelandGame();
+  if (found) {
+    const { sport, ev } = found;
+    const comp = ev.competitions[0];
+    const type = ((ev.status || {}).type) || {};
+    const state = type.state || 'post';
+    const competitors = comp.competitors || [];
+    const cle = competitors.find(isCle);
+    const opp = competitors.find((c) => c !== cle);
+    const series = comp.series || ev.series || null;
+
+    const game = {
+      league: sport.league, team: sport.name,
+      state, detail: type.shortDetail || type.detail || '',
+      home: cle && cle.homeAway === 'home',
+      oppAbbr: opp && opp.team ? (opp.team.abbreviation || opp.team.shortDisplayName || 'OPP') : 'OPP',
+      oppName: opp && opp.team ? (opp.team.shortDisplayName || opp.team.displayName || 'Opponent') : 'Opponent',
+      cleScore: cle ? cle.score : null, oppScore: opp ? opp.score : null,
+      series: series ? { title: series.title || 'Series', summary: series.summary || '' } : null,
+      odds: null,
+    };
+
+    // Odds only make sense before/while the game is live.
+    if (state === 'pre' || state === 'in') {
+      try {
+        const id = ev.id;
+        const oRes = await fetch(
+          `https://sports.core.api.espn.com/v2/sports/${sport.core}/events/${id}/competitions/${id}/odds`,
+          { headers: ESPN_UA, cf: { cacheTtl: 300 }, signal: AbortSignal.timeout(4000) });
+        if (oRes.ok) {
+          const od = await oRes.json();
+          const o = (od.items || [])[0];
+          if (o) {
+            game.odds = {
+              provider: (o.provider || {}).name || 'DraftKings',
+              details: o.details || '',           // e.g. "CLE -136"
+              overUnder: o.overUnder ?? null,
+              spread: o.spread ?? null,
+              cleML: (cle && cle.homeAway === 'home' ? o.homeTeamOdds : o.awayTeamOdds)?.moneyLine ?? null,
+              oppML: (cle && cle.homeAway === 'home' ? o.awayTeamOdds : o.homeTeamOdds)?.moneyLine ?? null,
+            };
+          }
+        }
+      } catch (_) { /* odds are best-effort */ }
+    }
+    payload = { ok: true, game };
+  }
+
+  const res = json(payload, 200, { 'cache-control': 'public, max-age=300', 'access-control-allow-origin': '*' });
+  try { await cache.put(cacheKey, res.clone()); } catch (_) {}
+  return res;
+}
+
+// Dynamic sitemap: same single URL, but lastmod rolls to today so crawlers see a
+// fresh signal on the daily cadence without a build step.
+function dynamicSitemap() {
+  const today = new Date().toISOString().slice(0, 10);
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://whiteknucklecity.com/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`;
+  return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
+}
+
 // GET /api/index — the live index as JSON. Public, cacheable, CORS-open so it
 // can power an embeddable "current grip level" badge on other Cleveland sites.
 async function handleIndexApi() {
@@ -478,7 +581,18 @@ async function runKnuckleAlerts(env) {
 
 export default {
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(runKnuckleAlerts(env));
+    // The */5 job drives Knuckle Alerts. The daily 04:00 UTC job also refreshes
+    // the odds + index caches so the board is clean each morning after late games.
+    ctx.waitUntil((async () => {
+      await runKnuckleAlerts(env);
+      if (event.cron === '0 4 * * *') {
+        const cache = caches.default;
+        try { await cache.delete(new Request('https://index.wkc.internal/index.json')); } catch (_) {}
+        try { await cache.delete(new Request('https://odds.wkc.internal/odds.json')); } catch (_) {}
+        try { await getIndex(); } catch (_) {}
+        try { await handleOdds(); } catch (_) {}
+      }
+    })());
   },
 
   async fetch(request, env) {
@@ -498,6 +612,12 @@ export default {
     }
     if (url.pathname === '/badge.svg') {
       return decorate(badgeSvg(await getIndex()), url.pathname);
+    }
+    if (url.pathname === '/api/odds') {
+      return decorate(await handleOdds(), url.pathname);
+    }
+    if (url.pathname === '/sitemap.xml') {
+      return decorate(dynamicSitemap(), url.pathname);
     }
 
     // Serve the static asset. For the homepage, rewrite the social tags with

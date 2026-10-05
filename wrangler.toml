@@ -27,7 +27,10 @@ run_worker_first = true
 binding = "WKC"
 id = "6c350522fc024620bb00ae2a4d19aa8b"
 
-# Knuckle Alerts: the scheduled() handler checks the index every 5 minutes and,
-# when a live Cleveland game crosses the alert threshold, emails the audience once.
+# Scheduled work:
+#   */5  — Knuckle Alerts: check the index, email the audience when a live game crosses 85.
+#   0 4  — daily ~midnight ET (04:00 UTC in EDT): refresh the odds/index caches so the
+#          morning board is clean after late games. (The live meter is already real-time;
+#          this just guarantees a daily rollover + keeps the dynamic sitemap's date fresh.)
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/5 * * * *", "0 4 * * *"]

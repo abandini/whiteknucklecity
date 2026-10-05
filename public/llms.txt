@@ -7,12 +7,22 @@
 
 ## Key facts
 
-- **What it is:** A nickname for Cleveland, Ohio, describing what it feels like to root for its teams.
+- **What it is:** A nickname for Cleveland, Ohio, describing what it feels like to root for its teams. An independent fan project.
 - **Why the name:** Decades of tense, heartbreaking finishes — Red Right 88 (1981), The Drive (1987), The Fumble (1988), The Shot (1989), The Move (1995, the Browns' relocation to Baltimore), the 1997 World Series Game 7, and the 2016 Indians Game 7 loss — alongside the euphoric 2016 Cavaliers championship (a 3–1 comeback over a 73-win Warriors team).
 - **The teams:** Cleveland Guardians (MLB), Cleveland Browns (NFL), Cleveland Cavaliers (NBA).
-- **The White Knuckle Index:** A live tension meter on the site that reads current Cleveland game scores from public ESPN scoreboards and rates the moment from 0 (relaxed) to 100 (maximum grip), refreshing every 60 seconds.
+- **The White Knuckle Index:** A live tension meter that reads current Cleveland game scores from public ESPN scoreboards and rates the moment from 0 (relaxed) to 100 (maximum grip), refreshing continuously. Also exposed as JSON at /api/index and as an embeddable badge at /badge.svg.
+- **October Ball:** During the postseason the site surfaces the current Cleveland series status and betting line (via /api/odds) for the live or next game.
+- **Knuckle Alerts:** A free email list that pings subscribers when a live Cleveland game's Index crosses 85, plus first notice when merch drops.
 - **Location:** Cleveland, Ohio (the 216).
 - **Affiliation:** Independent fan project. Not affiliated with any team, league, or broadcaster.
+
+## Features
+
+- **The White Knuckle Index** — the live 0–100 tension meter (home page).
+- **How We Earned The Name** — a timeline of Cleveland's defining sports moments.
+- **Required Reading** — a curated shelf of Cleveland sports books (Amazon affiliate links).
+- **Wear The Clench** — merch in progress; visitors vote cap vs. tee and can join the list.
+- **Share the pain** — share buttons that post the current live Index.
 
 ## Pages
 
@@ -20,4 +30,4 @@
 
 ## Contact / notes
 
-- Merch (caps, tees) is "coming soon"; visitors can sign up to be notified when it drops.
+- Merch (caps, tees) is in progress; visitors vote on which drops first and can sign up to be notified.

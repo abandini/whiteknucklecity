@@ -285,6 +285,16 @@
   .share-menu a, .share-menu button { display:block; width:100%; text-align:left; background:transparent; border:none; color:var(--ink); font-family:'Inter',sans-serif; font-size:0.9rem; padding:11px 14px; border-radius:8px; cursor:pointer; text-decoration:none; }
   .share-menu a:hover, .share-menu button:hover { background:rgba(255,255,255,0.06); color:var(--knuckle); }
   .share-hint { text-align:center; color:var(--muted); font-size:0.72rem; margin-top:10px; min-height:1.2em; }
+  /* OCTOBER BALL / odds strip */
+  .october { max-width:620px; margin:0 auto 28px; background:linear-gradient(180deg,rgba(215,38,61,0.12),var(--bg-2)); border:1px solid var(--knuckle); border-radius:16px; padding:18px 22px; }
+  .october .oc-tag { font-family:'Roboto Slab',serif; font-size:0.68rem; letter-spacing:0.28em; text-transform:uppercase; color:var(--knuckle); }
+  .october .oc-matchup { font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:0.02em; font-size:1.5rem; margin-top:4px; }
+  .october .oc-series { color:var(--ink); font-family:'Roboto Slab',serif; font-size:0.95rem; margin-top:2px; }
+  .october .oc-line { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:12px; }
+  .october .oc-line div { font-size:0.9rem; color:var(--muted); }
+  .october .oc-line b { color:var(--ink); font-family:'Roboto Slab',serif; }
+  .october .oc-note { color:var(--muted); font-size:0.7rem; margin-top:12px; opacity:0.8; }
+
   .alert-cta { text-align:center; color:var(--muted); font-size:0.9rem; margin-top:8px; }
   .alert-cta a { color:var(--ink); text-decoration:underline; text-decoration-color:var(--knuckle); text-underline-offset:3px; }
   .alert-cta a:hover { color:var(--knuckle); }
@@ -434,6 +444,14 @@
       <div class="index-head">
         <h2 class="kicker">The White Knuckle Index</h2>
         <p>How tense is Cleveland right now? Live from the Guardians, Browns, and Cavs. Green means breathe. Red means you already know.</p>
+      </div>
+
+      <div class="october" id="october" hidden>
+        <div class="oc-tag" id="ocTag">October Ball</div>
+        <div class="oc-matchup" id="ocMatchup"></div>
+        <div class="oc-series" id="ocSeries"></div>
+        <div class="oc-line" id="ocLine"></div>
+        <p class="oc-note">Line via ESPN (DraftKings). For entertainment — not betting advice.</p>
       </div>
 
       <div class="meter-shell">
@@ -1004,11 +1022,63 @@ function initEmbed() {
   });
 }
 
+/* ---- October Ball: series + odds for the current Cleveland game --------------
+   Populates from /api/odds (server-side: ESPN series + DraftKings line). Hidden
+   whenever there's no Cleveland game on the board. Built with safe DOM nodes —
+   ESPN strings never touch innerHTML. */
+const fmtML = (n) => (n == null ? '' : (n > 0 ? '+' + n : '' + n));
+
+function ocStat(label, value) {
+  const d = document.createElement('div');
+  d.append(label + ' ');
+  const b = document.createElement('b');
+  b.textContent = value;
+  d.appendChild(b);
+  return d;
+}
+
+async function loadOctober() {
+  const box = document.getElementById('october');
+  if (!box) return;
+  let g = null;
+  try {
+    const r = await fetch('/api/odds', { cache: 'no-store' });
+    const d = await r.json();
+    if (d && d.ok) g = d.game;
+  } catch (_) { return; }
+  if (!g) { box.hidden = true; return; }
+  // Only feature a game worth the spotlight: live, upcoming, or an active series.
+  // A finished regular-season game is already covered by the team cards.
+  if (g.state === 'post' && !g.series) { box.hidden = true; return; }
+
+  const playoff = g.series && /playoff|series|wild|division|championship|world/i.test((g.series.title || '') + (g.series.summary || ''));
+  document.getElementById('ocTag').textContent = playoff ? 'October Ball · ' + g.team : g.team;
+  document.getElementById('ocMatchup').textContent = g.team + (g.home ? ' vs ' : ' @ ') + g.oppAbbr;
+  document.getElementById('ocSeries').textContent = (g.series && g.series.summary) ? g.series.summary : (g.detail || '');
+
+  const line = document.getElementById('ocLine');
+  line.textContent = '';
+  if (g.state === 'in') {
+    const score = (g.cleScore != null) ? ' · CLE ' + g.cleScore + '–' + (g.oppScore ?? '') : '';
+    line.appendChild(ocStat('LIVE ·', (g.detail || '') + score));
+  } else if (g.state === 'pre' && g.detail) {
+    line.appendChild(ocStat('First pitch ·', g.detail));
+  }
+  if (g.odds) {
+    if (g.odds.cleML != null) line.appendChild(ocStat('Moneyline', 'CLE ' + fmtML(g.odds.cleML)));
+    if (g.odds.overUnder != null) line.appendChild(ocStat('O/U', String(g.odds.overUnder)));
+    if (g.odds.details) line.appendChild(ocStat('Line', g.odds.details));
+  }
+  box.hidden = false;
+}
+
 initShare();
 initVote();
 initEmbed();
 loadIndex();
+loadOctober();
 setInterval(loadIndex, 60000);
+setInterval(loadOctober, 300000);
 </script>
 
 <!-- Analytics: PostHog (privacy-tuned — DNT respected, no session recording,
