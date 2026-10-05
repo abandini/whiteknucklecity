@@ -159,8 +159,6 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   Printify product and swap the vote button for a real buy link.
 
 ## Open TODOs
-0. **GA4** — create the property + web stream by hand (API create is classifier-blocked), then add
-   the `G-XXXXXXX` gtag snippet next to PostHog. See the GSC/analytics section.
 1. **Set up Printify products** now that the cap-vs-tee vote is collecting demand; wire real buy
    links in place of the vote buttons once a winner is clear.
 2. **Distribution** (owner task): stand up WKC accounts on X + Bluesky so shares/alerts have a home;
@@ -190,7 +188,7 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 - Google Search Console: verified + property added + sitemap submitted (API). IndexNow pinged.
 - Dynamic daily sitemap; daily 04:00 UTC cache-refresh cron; refreshed llms.txt.
 - October Ball: /api/odds (series + DraftKings line) + home-page strip (live/upcoming/series only).
-- GA4 blocked by the auto-mode classifier (API property-create) — left as a hand task.
+- GA4 installed (property 557412102, G-8GB270XLSN) after a one-time permission grant; verified /g/collect fires.
 
 ## Done (2026-09-26)
 - Added PostHog (public US-cloud key `phc_yMcK…`, same project as the other sites; privacy-tuned,
@@ -205,10 +203,12 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
 - **Sitemap is dynamic** (served by the Worker) with `lastmod` = today — a daily-fresh crawl
   signal with no build step. The daily `0 4 * * *` cron also refreshes the odds/index caches.
 - To re-sync after changes: `/gsc-sync whiteknucklecity.com` (submit sitemap, URL inspect, IndexNow).
-- **GA4: NOT yet installed.** The GA4 Admin API `create property` call is blocked by the auto-mode
-  safety classifier, so the property must be created by hand (GA dashboard → new property + web
-  stream for whiteknucklecity.com). Drop the resulting `G-XXXXXXX` measurement ID in and a gtag
-  snippet goes in next to the PostHog one. OAuth creds for the API are in `vault.env` (GA4_*).
+- **GA4: installed** — property "White Knuckle City" (`properties/557412102`), web stream
+  `whiteknucklecity.com`, measurement ID **`G-8GB270XLSN`**. gtag snippet is in `index.html`
+  (localhost-guarded) next to PostHog; CSP allows googletagmanager + google-analytics. Created via
+  the Admin API (OAuth creds in `vault.env` GA4_*; the create call needs a one-time permission grant
+  — the auto-mode classifier blocks it by default). NOTE: a brand-new property's `/g/collect` can
+  503 during warm-up — check GA4 Realtime to confirm hits are landing.
 
 ## Analytics
 - **Cloudflare Web Analytics** (auto-injected zone beacon, `cloudflareinsights`) + **PostHog**
