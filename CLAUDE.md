@@ -159,6 +159,8 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   Printify product and swap the vote button for a real buy link.
 
 ## Open TODOs
+0. **GA4** — create the property + web stream by hand (API create is classifier-blocked), then add
+   the `G-XXXXXXX` gtag snippet next to PostHog. See the GSC/analytics section.
 1. **Set up Printify products** now that the cap-vs-tee vote is collecting demand; wire real buy
    links in place of the vote buttons once a winner is clear.
 2. **Distribution** (owner task): stand up WKC accounts on X + Bluesky so shares/alerts have a home;
@@ -183,13 +185,43 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   (`/api/vote` + KV), and the embeddable `/badge.svg`. Added the `WKC` KV namespace + cron trigger,
   reframed the signup/confirmation for consent, and split the rate-limit buckets.
 
+## Done (2026-10-05)
+- SEO/AEO E2E audit (strong: rich JSON-LD, FAQPage, canonical/hreflang, 1 H1, alt text, fast).
+- Google Search Console: verified + property added + sitemap submitted (API). IndexNow pinged.
+- Dynamic daily sitemap; daily 04:00 UTC cache-refresh cron; refreshed llms.txt.
+- October Ball: /api/odds (series + DraftKings line) + home-page strip (live/upcoming/series only).
+- GA4 blocked by the auto-mode classifier (API property-create) — left as a hand task.
+
 ## Done (2026-09-26)
 - Added PostHog (public US-cloud key `phc_yMcK…`, same project as the other sites; privacy-tuned,
   localhost-skipped) so real human traffic is measurable — the `site-stats` HUMANS section reads
   PostHog and filters by `$host`. Opened the CSP for PostHog (script/connect/img). Verified live.
 
+## Search / indexing (GSC)
+- **Google Search Console**: verified as a URL-prefix property (`https://whiteknucklecity.com/`)
+  via the `google-site-verification` meta tag in `index.html` (do not remove it). Property added
+  and `sitemap.xml` submitted through the Search Console API. Tokens: the multi-property
+  `~/.claude/tokens/google-silverkink.json` (webmasters + siteverification scopes).
+- **Sitemap is dynamic** (served by the Worker) with `lastmod` = today — a daily-fresh crawl
+  signal with no build step. The daily `0 4 * * *` cron also refreshes the odds/index caches.
+- To re-sync after changes: `/gsc-sync whiteknucklecity.com` (submit sitemap, URL inspect, IndexNow).
+- **GA4: NOT yet installed.** The GA4 Admin API `create property` call is blocked by the auto-mode
+  safety classifier, so the property must be created by hand (GA dashboard → new property + web
+  stream for whiteknucklecity.com). Drop the resulting `G-XXXXXXX` measurement ID in and a gtag
+  snippet goes in next to the PostHog one. OAuth creds for the API are in `vault.env` (GA4_*).
+
 ## Analytics
 - **Cloudflare Web Analytics** (auto-injected zone beacon, `cloudflareinsights`) + **PostHog**
-  (snippet at the bottom of `public/index.html`). For human numbers: `python3
+  (snippet at the bottom of `public/index.html`). NOTE: the zone CF Web Analytics auto-inject is
+  bypassed because the Worker serves the HTML, so CF Web Analytics may be empty — PostHog is the
+  real human source. For human numbers: `python3
   ~/.claude/skills/site-stats/scripts/site_stats.py --domain whiteknucklecity.com` (PostHog HUMANS
-  can lag ~1h). Cloudflare "uniques" are mostly bots/crawlers — not the audience.
+  can lag ~1h). Cloudflare "uniques" are mostly bots/crawlers — not the audience. GA4 pending (above).
+
+## October Ball (odds + series)
+- `GET /api/odds` (Worker, cached 5m): finds the live/next Cleveland game across MLB/NFL/NBA and
+  returns series status + the DraftKings line from ESPN's **core** API
+  (`sports.core.api.espn.com/.../events/{id}/competitions/{id}/odds` — needs the curl UA too).
+- The home-page "October Ball" strip (`#october`) shows it, but only for live/upcoming games or an
+  active playoff series; a finished regular-season game stays in the team cards. Odds are labeled
+  entertainment-only. Odds are NOT in the client's CORS scoreboard feed — that's why it's server-side.
