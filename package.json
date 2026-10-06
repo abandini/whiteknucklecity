@@ -1,0 +1,13 @@
+{
+  "name": "white-knuckle-city",
+  "version": "1.0.0",
+  "private": true,
+  "description": "White Knuckle City — a live Cleveland sports tension tracker (Cloudflare Worker + static assets).",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.69.0"
+  }
+}
