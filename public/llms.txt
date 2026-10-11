@@ -5,6 +5,11 @@
 > (NBA). It captures the white-knuckle tension of following Cleveland sports, where
 > the lead is never safe and games go down to the final out or whistle.
 
+Updated: 2026-10-11. In season now: Browns (NFL, 2026 regular season) and Cavaliers
+(NBA, 2026-27 preseason into the regular season). The Guardians' 2026 season is over.
+The home page shows the live or next Cleveland game, its start time (Eastern), the
+score, and the national TV network carrying it, read from public ESPN scoreboards.
+
 ## Key facts
 
 - **What it is:** A nickname for Cleveland, Ohio, describing what it feels like to root for its teams. An independent fan project.
@@ -12,6 +17,7 @@
 - **The teams:** Cleveland Guardians (MLB), Cleveland Browns (NFL), Cleveland Cavaliers (NBA).
 - **The White Knuckle Index:** A live tension meter that reads current Cleveland game scores from public ESPN scoreboards and rates the moment from 0 (relaxed) to 100 (maximum grip), refreshing continuously. Also exposed as JSON at /api/index and as an embeddable badge at /badge.svg.
 - **October Ball:** During the postseason the site surfaces the current Cleveland series status and betting line (via /api/odds) for the live or next game.
+- **Next game / where to watch:** The "In short" line under the definition names the live or next Guardians, Browns, or Cavaliers game, its Eastern start time, and the network (e.g. CBS, FOX, ESPN) as listed by ESPN. It is pre-rendered at the edge so it is readable without JavaScript.
 - **Knuckle Alerts:** A free email list that pings subscribers when a live Cleveland game's Index crosses 85, plus first notice when merch drops.
 - **Location:** Cleveland, Ohio (the 216).
 - **Affiliation:** Independent fan project. Not affiliated with any team, league, or broadcaster.
@@ -27,6 +33,9 @@
 ## Pages
 
 - Home / everything: https://whiteknucklecity.com/
+- Live index as JSON: https://whiteknucklecity.com/api/index
+- Live/next game + line as JSON: https://whiteknucklecity.com/api/odds
+- Embeddable badge: https://whiteknucklecity.com/badge.svg
 
 ## Contact / notes
 

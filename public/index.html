@@ -13,6 +13,10 @@
 <meta name="theme-color" content="#0b0d10" />
 <meta name="google-site-verification" content="-oipwWyLF575Y2XSzQLxSh1S0VFMnZdHbIrQxVw76sQ" />
 
+<!-- Google AdSense (Auto ads; account meta + loader — no manual units) -->
+<meta name="google-adsense-account" content="ca-pub-3401889582473794">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3401889582473794" crossorigin="anonymous"></script>
+
 <!-- Geo (Cleveland, Ohio) -->
 <meta name="geo.region" content="US-OH" />
 <meta name="geo.placename" content="Cleveland, Ohio" />
@@ -87,7 +91,7 @@
       "isPartOf": { "@id": "https://whiteknucklecity.com/#website" },
       "inLanguage": "en-US",
       "datePublished": "2026-07-01",
-      "dateModified": "2026-07-02",
+      "dateModified": "2026-10-11",
       "primaryImageOfPage": { "@id": "https://whiteknucklecity.com/#ogimage" },
       "about": [
         { "@id": "https://whiteknucklecity.com/#guardians" },
@@ -97,7 +101,7 @@
       "mainEntity": { "@id": "https://whiteknucklecity.com/#faq" },
       "speakable": {
         "@type": "SpeakableSpecification",
-        "cssSelector": [".def-card", ".faq-item"]
+        "cssSelector": [".answer", ".def-card", ".faq-item"]
       }
     },
     {
@@ -251,6 +255,9 @@
   .def ol { list-style:none; margin-top:18px; }
   .def ol li { padding:10px 0; border-bottom:1px dashed var(--line); font-size:clamp(1rem,2.2vw,1.2rem); }
   .def ol li b { color:var(--knuckle); font-family:'Roboto Slab',serif; margin-right:8px; }
+  .answer { margin-top:26px; padding-left:32px; color:var(--ink); font-size:clamp(1rem,2.1vw,1.12rem); line-height:1.6; max-width:760px; }
+  .answer b { color:var(--knuckle); font-family:'Roboto Slab',serif; }
+  .answer #answer-live { color:var(--muted); }
 
   /* LIVE INDEX */
   .index-head { text-align:center; margin-bottom:40px; }
@@ -436,6 +443,7 @@
           <li><b>3.</b> A condition you're born into. There is no cure. There is only next season.</li>
         </ol>
       </div>
+      <p class="answer" id="answer"><b>In short:</b> White Knuckle City tracks Cleveland's three pro teams — the Guardians (MLB), Browns (NFL), and Cavaliers (NBA) — with a live 0–100 tension index read from the scoreboard, plus the next game, when it starts, and which network has it. <span id="answer-live">Live scores, the next game, and where to watch load below.</span></p>
     </div>
   </section>
 
@@ -753,6 +761,12 @@ function evaluate(ev) {
   const oppName = opp && opp.team ? (opp.team.shortDisplayName || opp.team.name || 'Opponent') : 'Opponent';
   const oppAbbr = opp && opp.team ? opp.team.abbreviation : '';
   const scoreText = (!isNaN(cleScore) && !isNaN(oppScore)) ? ('CLE ' + cleScore + ' — ' + oppScore + ' ' + oppAbbr) : '';
+  // Where to watch: ESPN lists the national network(s) on the competition.
+  const bc = (comp.broadcasts || []).flatMap(b => b.names || []);
+  const geo = (comp.geoBroadcasts || []).map(g => g.media && g.media.shortName).filter(Boolean);
+  const broadcast = (bc.length ? bc : geo).slice(0, 2).join(' / ') || null;
+  const info = { state: stateName, oppName, home: !!(cle && cle.homeAway === 'home'), start: ev.date || null,
+                 detail: type.shortDetail || type.detail || '', broadcast, cleScore, oppScore };
 
   if (stateName === 'pre') {
     const t = type.shortDetail || 'Scheduled';
@@ -763,18 +777,44 @@ function evaluate(ev) {
     // that's anticipation, not a clench.
     const soon = !isNaN(start) && (start - Date.now()) < 12 * 3600 * 1000;
     if (soon) {
-      return { tension:12, statusHtml:'Pregame · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next };
+      return { tension:12, statusHtml:'Pregame · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next, info };
     }
-    return { tension:null, statusHtml:'Next · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next };
+    return { tension:null, statusHtml:'Next · vs ' + esc(oppName) + '<br><span style="opacity:.7">' + esc(t) + '</span>', scoreText:'', next, info };
   }
   if (stateName === 'post') {
     const won = cleScore > oppScore;
     const msg = won ? 'Final · Cleveland wins. Unclench.' : 'Final · Cleveland falls. There\'s always next season.';
-    return { tension: won ? 5 : 30, statusHtml:'<b>' + msg + '</b>', scoreText };
+    return { tension: won ? 5 : 30, statusHtml:'<b>' + msg + '</b>', scoreText, info };
   }
   const detail = type.shortDetail || type.detail || 'Live';
   const tension = computeLiveTension(cleScore, oppScore, ev, comp);
-  return { tension, statusHtml:'<span class="live-dot"></span>LIVE · ' + esc(detail), scoreText };
+  return { tension, statusHtml:'<span class="live-dot"></span>LIVE · ' + esc(detail), scoreText, info };
+}
+
+// The quotable "right now / next up / where to watch" line under the definition.
+// Mirrors answerText() in src/index.js (which pre-renders it at the edge) — keep in sync.
+function fmtET(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleString('en-US', { timeZone:'America/New_York', weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }) + ' ET';
+}
+function renderAnswer(results) {
+  const el = document.getElementById('answer-live');
+  if (!el) return;
+  const games = results.filter(r => r && r.info).map(r => Object.assign({ team: r.team }, r.info));
+  const live = games.filter(g => g.state === 'in').sort((a, b) => (b.tension || 0) - (a.tension || 0))[0] || null;
+  const next = games.filter(g => g.state === 'pre' && g.start).sort((a, b) => Date.parse(a.start) - Date.parse(b.start))[0] || null;
+  const last = (!live && !next) ? (games.filter(g => g.state === 'post')[0] || null) : null;
+  const vs = g => g.team + ' ' + (g.home ? 'vs' : 'at') + ' ' + g.oppName;
+  const parts = [];
+  if (live) {
+    const score = (!isNaN(live.cleScore) && !isNaN(live.oppScore)) ? ', Cleveland ' + live.cleScore + '–' + live.oppScore : '';
+    parts.push('Right now: ' + vs(live) + ', ' + (live.detail || 'live') + score + (live.broadcast ? ', on ' + live.broadcast : '') + '.');
+  }
+  if (next) parts.push('Next up: ' + vs(next) + ', ' + fmtET(next.start) + (next.broadcast ? ' on ' + next.broadcast : '') + '.');
+  if (last) parts.push('Latest: the ' + last.team + (last.cleScore > last.oppScore ? ' beat the ' : ' fell to the ') + last.oppName + ', ' + last.cleScore + '–' + last.oppScore + '.');
+  if (!parts.length) parts.push('No Cleveland game on the board right now. Rare footage.');
+  el.textContent = parts.join(' ');
 }
 
 function computeLiveTension(cle, opp, ev, comp) {
@@ -825,6 +865,7 @@ async function loadTeam(t) {
     const r = evaluate(findClevelandEvent(data));
     setTeam(t.key, r.statusHtml, r.scoreText);
     if (r.next) r.next.team = t.name;
+    r.team = t.name;
     return r;
   } catch (e) {
     setTeam(t.key, '<span style="opacity:.6">Scoreboard unavailable.</span>', '');
@@ -841,6 +882,7 @@ async function loadIndex() {
     if (r && r.next && isFinite(r.next.start) && (!nextUp || r.next.start < nextUp.start)) nextUp = r.next;
   }
   drive(overall, nextUp);
+  renderAnswer(results);
 }
 
 async function notifyMe(e) {

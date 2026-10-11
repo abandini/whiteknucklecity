@@ -33,16 +33,20 @@ const RATE_LIMIT_WINDOW = 600;   // seconds
 // client-side ESPN scoreboard fetches. Inline script/style are how this
 // single-file site ships, hence 'unsafe-inline'. JSON-LD is non-executable
 // and unaffected by script-src.
+const ADS = 'https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.adtrafficquality.google https://fundingchoicesmessages.google.com';
 const CSP = [
   "default-src 'none'",
   // cloudflareinsights = the zone's auto-injected Web Analytics beacon;
   // us-assets.i.posthog.com serves the PostHog SDK (array.js + lazy chunks).
-  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://us-assets.i.posthog.com https://www.googletagmanager.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  // ADS = Google AdSense (Auto ads) + its consent/quality domains; needed in
+  // script/img/frame/connect (ads render in iframes).
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://us-assets.i.posthog.com https://www.googletagmanager.com " + ADS,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fundingchoicesmessages.google.com",
   "font-src https://fonts.gstatic.com",
-  "img-src 'self' https://us.i.posthog.com https://www.google-analytics.com https://www.googletagmanager.com",
+  "img-src 'self' https://us.i.posthog.com https://www.google-analytics.com https://www.googletagmanager.com " + ADS,
   // PostHog → us(.i/-assets).i.posthog.com; GA4 gtag → googletagmanager + google-analytics.
-  "connect-src 'self' https://site.api.espn.com https://cloudflareinsights.com https://us.i.posthog.com https://us-assets.i.posthog.com https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com",
+  "connect-src 'self' https://site.api.espn.com https://cloudflareinsights.com https://us.i.posthog.com https://us-assets.i.posthog.com https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com " + ADS,
+  "frame-src " + ADS,
   "manifest-src 'self'",
   "base-uri 'none'",
   "form-action 'self'",
@@ -102,7 +106,17 @@ function evaluateGame(ev, sport) {
   const cleScore = cle ? parseInt(cle.score, 10) : NaN;
   const oppScore = opp ? parseInt(opp.score, 10) : NaN;
   const oppAbbr = opp && opp.team ? (opp.team.abbreviation || opp.team.shortDisplayName || 'OPP') : 'OPP';
+  const oppName = opp && opp.team ? (opp.team.shortDisplayName || opp.team.name || oppAbbr) : oppAbbr;
+  const oppFull = opp && opp.team ? (opp.team.displayName || oppName) : oppName;
   const detail = type.shortDetail || type.detail || '';
+  // Context for the answer summary + SportsEvent JSON-LD: tip-off time, venue,
+  // and the national TV network ESPN lists for the game (where to watch).
+  const start = ev.date || null;
+  const home = !!(cle && cle.homeAway === 'home');
+  const venue = comp.venue && comp.venue.fullName ? comp.venue.fullName : null;
+  const bc = (comp.broadcasts || []).flatMap((b) => b.names || []);
+  const geo = (comp.geoBroadcasts || []).map((g) => g.media && g.media.shortName).filter(Boolean);
+  const broadcast = (bc.length ? bc : geo).slice(0, 2).join(' / ') || null;
 
   let value = null;
   if (state === 'pre') {
@@ -119,7 +133,8 @@ function evaluateGame(ev, sport) {
     league: sport.league, team: sport.name,
     gameId: String(ev.id || comp.id || ''),
     state: state || 'unknown', value,
-    oppAbbr, cleScore, oppScore, detail,
+    oppAbbr, oppName, oppFull, cleScore, oppScore, detail,
+    start, home, venue, broadcast,
   };
 }
 
@@ -200,6 +215,70 @@ async function getIndex() {
   return snap;
 }
 
+// Pick the games worth a sentence: the live one (if any) and the next one up.
+function featuredGames(snap) {
+  const games = (snap && snap.games) || [];
+  const live = games.filter((g) => g.state === 'in').sort((a, b) => (b.value || 0) - (a.value || 0))[0] || null;
+  const next = games.filter((g) => g.state === 'pre' && g.start)
+    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start))[0] || null;
+  const last = !live && !next ? games.filter((g) => g.state === 'post')[0] || null : null;
+  return { live, next, last };
+}
+
+function fmtET(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' ET';
+}
+
+// Plain-text, quotable "what's happening right now" line for the answer block.
+// Mirrors renderAnswer() in index.html — keep the two in sync.
+function answerText(snap) {
+  const { live, next, last } = featuredGames(snap);
+  const vs = (g) => `${g.team} ${g.home ? 'vs' : 'at'} ${g.oppName}`;
+  const parts = [];
+  if (live) {
+    const score = (!isNaN(live.cleScore) && !isNaN(live.oppScore)) ? `, Cleveland ${live.cleScore}–${live.oppScore}` : '';
+    parts.push(`Right now: ${vs(live)}, ${live.detail || 'live'}${score}${live.broadcast ? `, on ${live.broadcast}` : ''}.`);
+  }
+  if (next) parts.push(`Next up: ${vs(next)}, ${fmtET(next.start)}${next.broadcast ? ` on ${next.broadcast}` : ''}.`);
+  if (last) {
+    const won = last.cleScore > last.oppScore;
+    parts.push(`Latest: the ${last.team} ${won ? 'beat' : 'fell to'} the ${last.oppName}, ${last.cleScore}–${last.oppScore}.`);
+  }
+  if (!parts.length) parts.push('No Cleveland game on the board right now. Rare footage.');
+  return parts.join(' ');
+}
+
+// schema.org SportsEvent for the live/next Cleveland game (SEO/AEO). The ESPN
+// strings go through JSON.stringify and '<' is escaped so the block can never
+// break out of its <script> tag.
+function eventJsonLd(snap) {
+  const { live, next } = featuredGames(snap);
+  const g = live || next;
+  if (!g || !g.start) return '';
+  const cleName = { Guardians: 'Cleveland Guardians', Browns: 'Cleveland Browns', Cavaliers: 'Cleveland Cavaliers' }[g.team] || `Cleveland ${g.team}`;
+  const cle = { '@type': 'SportsTeam', name: cleName };
+  const oppName = g.oppFull || g.oppName;
+  const opp = { '@type': 'SportsTeam', name: oppName };
+  const ev = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: `${g.home ? cleName : oppName} vs ${g.home ? oppName : cleName}`,
+    startDate: g.start,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    homeTeam: g.home ? cle : opp,
+    awayTeam: g.home ? opp : cle,
+    competitor: [cle, opp],
+    sport: { mlb: 'Baseball', nfl: 'American Football', nba: 'Basketball' }[g.league],
+    url: `${SITE}/#index`,
+  };
+  if (g.venue) ev.location = { '@type': 'Place', name: g.venue };
+  if (g.broadcast) ev.description = `Watch on ${g.broadcast}. Live tension tracked by the White Knuckle Index.`;
+  return '<script type="application/ld+json">' + JSON.stringify(ev).replace(/</g, '\\u003c') + '</script>';
+}
+
 // Rewrites the homepage social tags with the live snapshot. One class instance
 // per meta name we want to override.
 class SetContent {
@@ -207,8 +286,12 @@ class SetContent {
   element(el) { el.setAttribute('content', this.value); }
 }
 
-function liveOgRewriter(meta) {
+function liveOgRewriter(meta, snap) {
+  const answer = answerText(snap);
+  const ld = eventJsonLd(snap);
   return new HTMLRewriter()
+    .on('#answer-live', { element(el) { el.setInnerContent(answer); } })
+    .on('head', { element(el) { if (ld) el.append(ld, { html: true }); } })
     .on('meta[property="og:title"]',        new SetContent(meta.title))
     .on('meta[name="twitter:title"]',       new SetContent(meta.title))
     .on('meta[property="og:description"]',  new SetContent(meta.description))
@@ -628,7 +711,7 @@ export default {
     if (isHome && isHtml && request.method === 'GET') {
       const snap = await getIndex();
       if (snap.known) {
-        const transformed = liveOgRewriter(shareMeta(snap)).transform(assetRes);
+        const transformed = liveOgRewriter(shareMeta(snap), snap).transform(assetRes);
         return decorate(transformed, url.pathname);
       }
     }

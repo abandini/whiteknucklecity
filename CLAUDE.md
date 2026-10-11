@@ -183,6 +183,20 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   (`/api/vote` + KV), and the embeddable `/badge.svg`. Added the `WKC` KV namespace + cron trigger,
   reframed the signup/confirmation for consent, and split the rate-limit buckets.
 
+## Done (2026-10-11)
+- **Google AdSense** (Auto ads): account meta + `adsbygoogle.js` loader in the `<head>` of
+  `index.html` and `404.html`; `public/ads.txt` (`pub-3401889582473794`); CSP opened for
+  googlesyndication/doubleclick/google/adtrafficquality/fundingchoicesmessages (incl. `frame-src`).
+  No manual ad units — keep it that way until there's traffic worth placing.
+- **Answer block (AEO)**: the "In short:" paragraph under the definition (`#answer` /
+  `#answer-live`) states what the site covers + the live/next game, Eastern start time, score
+  and TV network (ESPN `broadcasts[].names`). The Worker pre-renders `#answer-live` at the edge
+  via `answerText()` in the homepage HTMLRewriter pass and appends a `SportsEvent` JSON-LD
+  (`eventJsonLd()`) for the live/next game; the client `renderAnswer()` refreshes it every 60s.
+  Keep `answerText()` and `renderAnswer()` in sync. `.answer` is in the `speakable` selectors.
+- `evaluateGame()` now also returns `oppName/oppFull/start/home/venue/broadcast` (surfaces in
+  `/api/index`). `llms.txt` refreshed with the in-season note + API URLs.
+
 ## Done (2026-10-05)
 - SEO/AEO E2E audit (strong: rich JSON-LD, FAQPage, canonical/hreflang, 1 H1, alt text, fast).
 - Google Search Console: verified + property added + sitemap submitted (API). IndexNow pinged.
