@@ -524,6 +524,11 @@ function dynamicSitemap() {
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://whiteknucklecity.com/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
 </urlset>`;
   return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
 }
@@ -698,6 +703,10 @@ export default {
     }
     if (url.pathname === '/api/odds') {
       return decorate(await handleOdds(), url.pathname);
+    }
+    // Privacy policy lives at /privacy (public/privacy.html); common aliases 301 there.
+    if (url.pathname === '/privacy-policy' || url.pathname === '/privacy-policy/' || url.pathname === '/privacy/' || url.pathname === '/privacy.html') {
+      return Response.redirect('https://whiteknucklecity.com/privacy', 301);
     }
     if (url.pathname === '/sitemap.xml') {
       return decorate(dynamicSitemap(), url.pathname);
