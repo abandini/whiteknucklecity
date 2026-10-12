@@ -59,6 +59,18 @@ const json = (obj, status = 200, extra = {}) =>
     headers: { 'content-type': 'application/json', ...extra },
   });
 
+// ESPN groups games by their Eastern-time date. The default scoreboard endpoint
+// omits postseason games (verified during the 2026 ALCS), so we always query with
+// an explicit ?dates=YYYYMMDD in America/New_York — a 10pm ET game is still "today"
+// in ET even though it's tomorrow in UTC.
+function etDate() {
+  const p = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date());
+  return p.replace(/-/g, '');
+}
+const scoreboardUrl = (base) => base + '?dates=' + etDate();
+
 // ───────────────────────── White Knuckle Index (server side) ─────────────────
 // Mirrors the client logic in index.html so the value on a shared card matches
 // the meter. Reads the three Cleveland teams from public ESPN scoreboards.
@@ -175,7 +187,7 @@ async function computeIndex() {
       // fingerprint reads as a bot-in-disguise), but it allows honest HTTP-client
       // UAs. curl's is the simplest that returns 200. The client meter is
       // unaffected — it reads ESPN directly from the visitor's real browser.
-      const res = await fetch(s.url, {
+      const res = await fetch(scoreboardUrl(s.url), {
         headers: { 'user-agent': 'curl/8.7.1' },
         cf: { cacheTtl: 30, cacheEverything: true },
         signal: AbortSignal.timeout(4000),
@@ -436,7 +448,7 @@ async function findClevelandGame() {
   const rank = (s) => (s === 'in' ? 3 : s === 'pre' ? 2 : 1);
   await Promise.all(SPORTS.map(async (s) => {
     try {
-      const res = await fetch(s.url, { headers: ESPN_UA, cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(4000) });
+      const res = await fetch(scoreboardUrl(s.url), { headers: ESPN_UA, cf: { cacheTtl: 60 }, signal: AbortSignal.timeout(4000) });
       if (!res.ok) return;
       const ev = findClevelandEvent(await res.json());
       if (!ev) return;
@@ -452,11 +464,13 @@ async function findClevelandGame() {
 // GET /api/odds — series status + betting line for the next/current Cleveland
 // playoff (or regular) game. Odds come from ESPN's core API (DraftKings line).
 // Cached ~5 min. Returns { ok, game: {...} | null }. Entertainment only.
-async function handleOdds() {
+async function handleOdds(bustCache) {
   const cache = caches.default;
   const cacheKey = new Request('https://odds.wkc.internal/odds.json');
-  const hit = await cache.match(cacheKey);
-  if (hit) { try { return new Response(hit.body, hit); } catch (_) {} }
+  if (!bustCache) {
+    const hit = await cache.match(cacheKey);
+    if (hit) { try { return new Response(hit.body, hit); } catch (_) {} }
+  }
 
   let payload = { ok: true, game: null };
   const found = await findClevelandGame();
@@ -469,25 +483,64 @@ async function handleOdds() {
     const cle = competitors.find(isCle);
     const opp = competitors.find((c) => c !== cle);
     const series = comp.series || ev.series || null;
+    // Playoff round label, e.g. "ALCS - Game 1" (from the scoreboard event notes).
+    const round = ((comp.notes || [])[0] || {}).headline || '';
 
     const game = {
       league: sport.league, team: sport.name,
       state, detail: type.shortDetail || type.detail || '',
+      round,
+      firstPitch: state === 'pre' ? (ev.date || '') : '',
       home: cle && cle.homeAway === 'home',
       oppAbbr: opp && opp.team ? (opp.team.abbreviation || opp.team.shortDisplayName || 'OPP') : 'OPP',
       oppName: opp && opp.team ? (opp.team.shortDisplayName || opp.team.displayName || 'Opponent') : 'Opponent',
       cleScore: cle ? cle.score : null, oppScore: opp ? opp.score : null,
       series: series ? { title: series.title || 'Series', summary: series.summary || '' } : null,
+      situation: null, winProb: null,
       odds: null,
     };
 
-    // Odds only make sense before/while the game is live.
+    // Live drama: the current situation (bases/outs/count) + win probability.
+    if (state === 'in') {
+      const s = comp.situation || {};
+      const on1 = !!s.onFirst, on2 = !!s.onSecond, on3 = !!s.onThird;
+      let bases = '';
+      if (sport.league === 'mlb') {
+        if (on1 && on2 && on3) bases = 'bases loaded';
+        else {
+          const r = []; if (on1) r.push('1st'); if (on2) r.push('2nd'); if (on3) r.push('3rd');
+          bases = r.length ? 'runners on ' + r.join(' & ') : 'bases empty';
+        }
+      }
+      game.situation = {
+        bases,
+        outs: (s.outs != null ? s.outs : null),
+        count: (s.balls != null && s.strikes != null) ? (s.balls + '-' + s.strikes) : '',
+        lastPlay: (s.lastPlay && s.lastPlay.text) ? s.lastPlay.text : (typeof s.downDistanceText === 'string' ? s.downDistanceText : ''),
+      };
+      try {
+        const sumUrl = sport.league === 'mlb' ? 'baseball/mlb' : sport.league === 'nfl' ? 'football/nfl' : 'basketball/nba';
+        const sRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sumUrl}/summary?event=${ev.id}`,
+          { headers: ESPN_UA, cf: { cacheTtl: 30 }, signal: AbortSignal.timeout(4000) });
+        if (sRes.ok) {
+          const sum = await sRes.json();
+          const wp = (sum.winprobability || []);
+          const last = wp.length ? wp[wp.length - 1] : null;
+          if (last && typeof last.homeWinPercentage === 'number') {
+            const homePct = Math.round(last.homeWinPercentage * 100);
+            game.winProb = game.home ? homePct : (100 - homePct); // CLE win %
+          }
+        }
+      } catch (_) { /* win prob best-effort */ }
+    }
+
+    // Odds make sense before/while the game is live.
     if (state === 'pre' || state === 'in') {
       try {
         const id = ev.id;
         const oRes = await fetch(
           `https://sports.core.api.espn.com/v2/sports/${sport.core}/events/${id}/competitions/${id}/odds`,
-          { headers: ESPN_UA, cf: { cacheTtl: 300 }, signal: AbortSignal.timeout(4000) });
+          { headers: ESPN_UA, cf: { cacheTtl: 120 }, signal: AbortSignal.timeout(4000) });
         if (oRes.ok) {
           const od = await oRes.json();
           const o = (od.items || [])[0];
@@ -507,7 +560,9 @@ async function handleOdds() {
     payload = { ok: true, game };
   }
 
-  const res = json(payload, 200, { 'cache-control': 'public, max-age=300', 'access-control-allow-origin': '*' });
+  // Live games get a short cache so the situation/win-prob stay current.
+  const ttl = (payload.game && payload.game.state === 'in') ? 45 : 300;
+  const res = json(payload, 200, { 'cache-control': 'public, max-age=' + ttl, 'access-control-allow-origin': '*' });
   try { await cache.put(cacheKey, res.clone()); } catch (_) {}
   return res;
 }
@@ -702,7 +757,7 @@ export default {
       return decorate(badgeSvg(await getIndex()), url.pathname);
     }
     if (url.pathname === '/api/odds') {
-      return decorate(await handleOdds(), url.pathname);
+      return decorate(await handleOdds(url.searchParams.has('fresh')), url.pathname);
     }
     // Privacy policy lives at /privacy (public/privacy.html); common aliases 301 there.
     if (url.pathname === '/privacy-policy' || url.pathname === '/privacy-policy/' || url.pathname === '/privacy/' || url.pathname === '/privacy.html') {

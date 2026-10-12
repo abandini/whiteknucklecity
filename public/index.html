@@ -856,10 +856,20 @@ function drive(overall, nextUp) {
   if (bar) { bar.setAttribute('aria-valuenow', String(overall)); bar.setAttribute('aria-valuetext', overall + ' of 100 — ' + label); }
 }
 
+// ESPN's default scoreboard omits postseason games; query with today's Eastern
+// date so playoff games (e.g. the ALCS) actually show up in the meter.
+function etDate() {
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' })
+      .format(new Date()).replace(/-/g, '');
+  } catch (_) { return ''; }
+}
+
 async function loadTeam(t) {
   try {
     const timeout = (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(10000) : undefined;
-    const res = await fetch(t.url, { cache:'no-store', signal: timeout });
+    const d = etDate();
+    const res = await fetch(t.url + (d ? '?dates=' + d : ''), { cache:'no-store', signal: timeout });
     if (!res.ok) throw new Error('bad status ' + res.status);
     const data = await res.json();
     const r = evaluate(findClevelandEvent(data));
@@ -1073,7 +1083,7 @@ const fmtML = (n) => (n == null ? '' : (n > 0 ? '+' + n : '' + n));
 
 function ocStat(label, value) {
   const d = document.createElement('div');
-  d.append(label + ' ');
+  if (label) d.append(label + ' ');
   const b = document.createElement('b');
   b.textContent = value;
   d.appendChild(b);
@@ -1094,23 +1104,31 @@ async function loadOctober() {
   // A finished regular-season game is already covered by the team cards.
   if (g.state === 'post' && !g.series) { box.hidden = true; return; }
 
-  const playoff = g.series && /playoff|series|wild|division|championship|world/i.test((g.series.title || '') + (g.series.summary || ''));
-  document.getElementById('ocTag').textContent = playoff ? 'October Ball · ' + g.team : g.team;
-  document.getElementById('ocMatchup').textContent = g.team + (g.home ? ' vs ' : ' @ ') + g.oppAbbr;
-  document.getElementById('ocSeries').textContent = (g.series && g.series.summary) ? g.series.summary : (g.detail || '');
+  // Round label ("ALCS - Game 1") leads for playoff games; add a "clench" tag live.
+  const round = g.round ? g.round.replace(/\s*-\s*/, ' · ') : '';
+  const live = g.state === 'in';
+  document.getElementById('ocTag').textContent =
+    (live ? '🔴 Clench time · ' : '') + (round || (g.series ? 'October Ball · ' + g.team : g.team));
+  document.getElementById('ocMatchup').textContent = g.team + (g.home ? ' vs ' : ' @ ') + (g.oppName || g.oppAbbr);
+  document.getElementById('ocSeries').textContent = (g.series && g.series.summary) ? g.series.summary : '';
 
   const line = document.getElementById('ocLine');
   line.textContent = '';
-  if (g.state === 'in') {
-    const score = (g.cleScore != null) ? ' · CLE ' + g.cleScore + '–' + (g.oppScore ?? '') : '';
-    line.appendChild(ocStat('LIVE ·', (g.detail || '') + score));
+  if (live) {
+    if (g.cleScore != null) line.appendChild(ocStat('', 'CLE ' + g.cleScore + '–' + (g.oppScore ?? '') + ' ' + g.oppAbbr));
+    if (g.detail) line.appendChild(ocStat('', g.detail));
+    if (g.situation) {
+      if (g.situation.bases) line.appendChild(ocStat('', g.situation.bases));
+      if (g.situation.outs != null) line.appendChild(ocStat('', g.situation.outs + (g.situation.outs === 1 ? ' out' : ' out')));
+      if (g.situation.count) line.appendChild(ocStat('Count', g.situation.count));
+    }
+    if (g.winProb != null) line.appendChild(ocStat('Cleveland win prob', g.winProb + '%'));
   } else if (g.state === 'pre' && g.detail) {
-    line.appendChild(ocStat('First pitch ·', g.detail));
+    line.appendChild(ocStat('First pitch', g.detail));
   }
   if (g.odds) {
     if (g.odds.cleML != null) line.appendChild(ocStat('Moneyline', 'CLE ' + fmtML(g.odds.cleML)));
     if (g.odds.overUnder != null) line.appendChild(ocStat('O/U', String(g.odds.overUnder)));
-    if (g.odds.details) line.appendChild(ocStat('Line', g.odds.details));
   }
   box.hidden = false;
 }
@@ -1121,7 +1139,7 @@ initEmbed();
 loadIndex();
 loadOctober();
 setInterval(loadIndex, 60000);
-setInterval(loadOctober, 300000);
+setInterval(loadOctober, 60000);
 </script>
 
 <!-- Analytics: Google Analytics 4 (gtag). Config only fires off-localhost so dev

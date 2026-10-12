@@ -5,10 +5,11 @@
 > (NBA). It captures the white-knuckle tension of following Cleveland sports, where
 > the lead is never safe and games go down to the final out or whistle.
 
-Updated: 2026-10-11. In season now: Browns (NFL, 2026 regular season) and Cavaliers
-(NBA, 2026-27 preseason into the regular season). The Guardians' 2026 season is over.
-The home page shows the live or next Cleveland game, its start time (Eastern), the
-score, and the national TV network carrying it, read from public ESPN scoreboards.
+Updated: 2026-10-12. In season now: the Guardians are in the 2026 MLB playoffs — they beat
+the Chicago White Sox in the ALDS and now face the Tampa Bay Rays in the ALCS (best-of-7;
+Game 1 is Oct 12). The Browns (NFL regular season) and Cavaliers (NBA) are also playing.
+The home page shows the live or next Cleveland game, its start time (Eastern), the score,
+the series status, and the national TV network carrying it, read from public ESPN scoreboards.
 
 ## Key facts
 
