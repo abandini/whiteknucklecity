@@ -232,6 +232,14 @@ apex. If you ever move again, this is the swap list: `public/index.html`, `publi
   ~/.claude/skills/site-stats/scripts/site_stats.py --domain whiteknucklecity.com` (PostHog HUMANS
   can lag ~1h). Cloudflare "uniques" are mostly bots/crawlers — not the audience. GA4 pending (above).
 
+## ESPN postseason gotcha (CRITICAL)
+- ESPN's **default** scoreboard endpoint (no `?dates=`) **omits postseason games** (verified during
+  the 2026 ALCS — the Guardians' game simply wasn't there). Always query with an explicit
+  `?dates=YYYYMMDD` in **America/New_York** (a 10pm ET game is still "today" in ET but tomorrow in
+  UTC). Helpers: `scoreboardUrl()`/`etDate()` server-side, `etDate()` client-side. This affects the
+  Index meter (client + server `computeIndex`), the next-game answer block, and `/api/odds` — all
+  three missed the ALCS game until the dated fix.
+
 ## October Ball (odds + series)
 - `GET /api/odds` (Worker, cached 5m): finds the live/next Cleveland game across MLB/NFL/NBA and
   returns series status + the DraftKings line from ESPN's **core** API
