@@ -331,6 +331,7 @@ function decorate(response, pathname) {
   const r = new Response(response.body, response);
   r.headers.set('strict-transport-security', 'max-age=31536000; includeSubDomains');
   r.headers.set('x-content-type-options', 'nosniff');
+  r.headers.set('x-frame-options', 'DENY');
   r.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
   r.headers.set('permissions-policy', 'camera=(), microphone=(), geolocation=()');
   const type = r.headers.get('content-type') || '';
